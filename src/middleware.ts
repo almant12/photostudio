@@ -32,8 +32,8 @@ export const config = {
         '/api/post',
         '/api/post/update',
         '/api/post/delete',
-
-        'api/user/update',
+        
+        '/api/user/update',
          '/uploadImages'
         ],
 }
