@@ -5,8 +5,8 @@ import * as jose from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 export async function middleware(req: NextRequest){
-
     return NextResponse.next();
+
     // //check for cookie
     // const cookie = cookies().get('Authorization');
     // if(!cookie){
@@ -27,5 +27,5 @@ export async function middleware(req: NextRequest){
 }
 
 // export const config = {
-//         matcher: '/about'
+//         matcher: '/uploadImages'
 // }
