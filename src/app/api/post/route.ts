@@ -6,11 +6,6 @@ import { authUser } from "lib/authUser";
 
 const prisma = new PrismaClient();
 
-export const config = {
-    api: {
-      bodyParser: false,
-    },
-  };
 
 export async function GET(){
     try{
