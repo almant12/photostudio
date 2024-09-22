@@ -51,5 +51,16 @@ export async function POST(req: NextRequest) {
         .setExpirationTime('1h')
         .sign(secret);
 
-    return NextResponse.json({ 'token': jwt });
+        const response = NextResponse.json({ message: 'Login successful' });
+        response.cookies.set('Authorization', jwt, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            path: '/',
+            expires: new Date(Date.now() + 60 * 60 * 1000) // Skadon pas 1 ore
+        });
+    
+        return response;
 }
+
+
