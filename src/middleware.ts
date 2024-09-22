@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest){
 
     //check for cookie
     const cookie = cookies().get('Authorization');
-    if(!cookie){
+    if(!cookie?.value){
         return NextResponse.redirect(new URL('/login',req.url));
     }
 
@@ -27,5 +27,13 @@ export async function middleware(req: NextRequest){
 }
 
 export const config = {
-    matcher: ['/api/logout', '/uploadImages'],
+    matcher: [
+        '/api/logout',
+        '/api/post',
+        '/api/post/update',
+        '/api/post/delete',
+
+        'api/user/update',
+         '/uploadImages'
+        ],
 }
