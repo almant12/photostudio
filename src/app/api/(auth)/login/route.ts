@@ -5,6 +5,7 @@ import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
 import { use } from "react";
+import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();
 
@@ -51,16 +52,14 @@ export async function POST(req: NextRequest) {
         .setExpirationTime('1h')
         .sign(secret);
 
-        const response = NextResponse.json({ message: 'Login successful' });
-        response.cookies.set('Authorization', jwt, {
+        
+        cookies().set('Authorization', jwt, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
             sameSite: 'strict',
             path: '/',
-            expires: new Date(Date.now() + 60 * 60 * 1000) // Skadon pas 1 ore
         });
     
-        return response;
+        return NextResponse.json({'token':jwt});
 }
 
 
