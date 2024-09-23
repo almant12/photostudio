@@ -46,7 +46,8 @@ export async function POST(req: NextRequest) {
 
     const jwt = await new jose.SignJWT({
         id:user.id.toString(),
-        name:user.name
+        name:user.name,
+        role:user.role
     })
         .setProtectedHeader({ alg })
         .setExpirationTime('1h')
