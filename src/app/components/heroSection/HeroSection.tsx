@@ -54,9 +54,9 @@ const HeroSection = () => {
         memories. Each photograph is a window into a unique world, capturing the essence of our experiences
         and emotions. Explore our gallery and discover the stories behind every shot.
       </p>
-      <a href="/uploadImages" className="bg-green-600 text-white text-center uppercase font-semibold px-4 py-2 rounded-md inline-block hover:scale-105 mt-10 content-to-animate">
+      <Link href="/admin/post/create" className="bg-green-600 text-white text-center uppercase font-semibold px-4 py-2 rounded-md inline-block hover:scale-105 mt-10 content-to-animate">
         Upload Here
-      </a>
+      </Link>
     </div>
   </div>
 
