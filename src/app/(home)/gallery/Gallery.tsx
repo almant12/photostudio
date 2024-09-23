@@ -14,25 +14,9 @@ const Gallery = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchUser = async () => {
-    const response = await fetch(`/api/user/${userId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      // If user not found, redirect to 404
-      router.push('/404');
-      return;
-    }
-
-    fetchPosts();
-  };
 
   const fetchPosts = async () => {
-    const response = await fetch(`/api/post/${userId}`, {
+    const response = await fetch(`/api/post/user/${userId}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -41,15 +25,16 @@ const Gallery = ({ userId }) => {
 
     if (response.ok) {
       const data = await response.json();
-      setPosts(data.post);
+      setPosts(data.posts);
     } else {
+      router.push('/404');
       setError('Failed to fetch posts');
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchUser();
+    fetchPosts()
   }, [userId]);
 
   useEffect(() => {
@@ -76,34 +61,32 @@ const Gallery = ({ userId }) => {
       });
     }
   }, [loading, posts]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
+  
   return (
     <div className="pt-28">
-      <h1>{userId}</h1>
-      <h2 className="text-center text-3xl font-bold">Gallery</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-20">
-        {posts.map((post) => (
-          <div key={post.id}>
-            <Image 
-              className="h-auto max-w-full rounded-lg gallery-img" 
-              src={post.image} 
-              alt={post.title} 
-              width={500} 
-              height={300} 
-            />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <>
+          <h2 className="text-center text-3xl font-bold">Gallery</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-20">
+            {posts.map((post) => (
+              <div key={post.id}>
+                <Image 
+                  className="h-auto max-w-full rounded-lg gallery-img" 
+                  src={post.image} 
+                  alt={post.title} 
+                  width={500} 
+                  height={300} 
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
+  
 };
 
 export default Gallery;

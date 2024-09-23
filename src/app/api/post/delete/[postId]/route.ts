@@ -28,7 +28,7 @@ export async function DELETE(req:NextRequest,{params}:{params:{postId:string}}){
         }
 
         //check if the authenticate user is the author of the post
-        if (post.authorId !== authenticatedUser.id){
+        if (post.authorId !== parseInt(authenticatedUser.id)){
             return NextResponse.json({'message':'Unauthorized to delete this post'},{status:403});
         }
 

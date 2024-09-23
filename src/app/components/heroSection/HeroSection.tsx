@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Background from '../image/background1.jpg';
-import background1 from '../image/background1.jpg';
-import Footer from "../footer/footer";
 import { scrollAnimation } from "../heroSection/scrollAnimation"; // Importo animacionin
 
 const HeroSection = () => {
@@ -30,7 +28,6 @@ const HeroSection = () => {
 
     } catch (error) {
       console.error('Error fetching users:', error);
-      throw error; // Handle or propagate the error
     }
   };
 
@@ -81,7 +78,7 @@ const HeroSection = () => {
               height={200} 
               className="rounded-lg shadow-lg mb-4" 
             />
-            <Link href={'/about'} className="text-center text-lg text-black font-semibold">{user.name}</Link>
+             <Link href={`/gallery/${user.id}`} className="text-center text-lg text-black font-semibold">{user.name}</Link>
           </div>
         ))}
       </div>
