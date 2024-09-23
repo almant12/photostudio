@@ -9,9 +9,6 @@ export async function middleware(req: NextRequest){
 
     //check for cookie
     const cookie = cookies().get('Authorization');
-    if(!cookie?.value){
-        return NextResponse.redirect(new URL('/login',req.url));
-    }
 
     //validate 
     const secret = new TextEncoder().encode(JWT_SECRET);

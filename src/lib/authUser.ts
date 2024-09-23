@@ -1,24 +1,25 @@
 import { jwtVerify } from 'jose';
-import { NextRequest} from 'next/server';
+import { NextRequest } from 'next/server';
+import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function authUser(req: NextRequest) {
-    // Extract the Authorization header
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    // Get the cookies
+    const cookieStore = cookies();
+    const token = cookieStore.get('Authorization'); // Retrieve the token from cookies
+
+    // If no token is found, return invalid
+    if (!token) {
         return { valid: false, user: null };
     }
-
-    // Get the token from Authorization header
-    const token = authHeader.split(' ')[1];
 
     try {
         // Convert to Uint8Array
         const secretKey = new TextEncoder().encode(JWT_SECRET);
 
         // Verify and decode the JWT
-        const { payload } = await jwtVerify(token, secretKey);
+        const { payload } = await jwtVerify(token.value, secretKey); // Use token.value
 
         // Return decoded payload
         return { valid: true, user: payload };
