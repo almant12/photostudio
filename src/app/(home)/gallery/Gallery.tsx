@@ -1,85 +1,106 @@
 'use client';
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRouter } from 'next/navigation'
 
 gsap.registerPlugin(ScrollTrigger);
 
-const Gallery = () => {
-  useEffect(() => {
-    gsap.utils.toArray(".gallery-img").forEach((img) => {
-      
-      if (img instanceof HTMLElement) {
-        gsap.fromTo(
-          img,
-          { y: 100, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: img,
-              start: "top 80%", // fillon kur imazhi është në 80% të viewport-it
-              end: "bottom 60%",
-              toggleActions: "play none none reverse", // animacioni luhet dhe anulohet kur largohet nga viewport
-            },
-          }
-        );
-      }
+const Gallery = ({ userId }) => {
+  const router = useRouter();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchUser = async () => {
+    const response = await fetch(`/api/user/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-  }, []);
+
+    if (!response.ok) {
+      // If user not found, redirect to 404
+      router.push('/404');
+      return;
+    }
+
+    fetchPosts();
+  };
+
+  const fetchPosts = async () => {
+    const response = await fetch(`/api/post/${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      setPosts(data.post);
+    } else {
+      setError('Failed to fetch posts');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, [userId]);
+
+  useEffect(() => {
+    if (!loading && posts.length > 0) {
+      gsap.utils.toArray(".gallery-img").forEach((img) => {
+        if (img instanceof HTMLElement) {
+          gsap.fromTo(
+            img,
+            { y: 100, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: img,
+                start: "top 80%",
+                end: "bottom 60%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      });
+    }
+  }, [loading, posts]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div className="pt-28"> {/* Hapësirë e sipërme për të kaluar navbar-in */}
-      <h2 className="text-center text-3xl font-bold">Gallery</h2> {/* Titulli */}
+    <div className="pt-28">
+      <h1>{userId}</h1>
+      <h2 className="text-center text-3xl font-bold">Gallery</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-20">
-        <div className="grid gap-4">
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/album/3.jpg" alt="" width={500} height={300} />
+        {posts.map((post) => (
+          <div key={post.id}>
+            <Image 
+              className="h-auto max-w-full rounded-lg gallery-img" 
+              src={post.image} 
+              alt={post.title} 
+              width={500} 
+              height={300} 
+            />
           </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(1).jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(5).jpg" alt="" width={500} height={300} />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(5).jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(2).jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(6).jpg" alt="" width={500} height={300} />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(3).jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/album/2.jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/album/4.jpg" alt="" width={500} height={300} />
-          </div>
-        </div>
-        <div className="grid gap-4">
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/album/3.jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(2).jpg" alt="" width={500} height={300} />
-          </div>
-          <div>
-            <Image className="h-auto max-w-full rounded-lg gallery-img" src="https://madebydesignesia.com/themes/photix/images/gallery/pf%20(4).jpg" alt="" width={500} height={300} />
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
