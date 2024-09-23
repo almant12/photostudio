@@ -1,5 +1,6 @@
 'use client'
 import { useState ,useEffect} from "react";
+import Image from "next/image";
 
 export default function PostIndex() {
 
@@ -14,6 +15,10 @@ export default function PostIndex() {
                     'Content-Type': 'application/json',
                   },
             });
+            if(response.ok){
+              const data = await response.json();
+              setPost(data)
+            }
         }catch(error){
             console.log(error)
         }
@@ -22,7 +27,6 @@ export default function PostIndex() {
     useEffect(()=>{
         fetchPosts()
     },[])
-
     return (
       <div className="container mx-auto p-4">
         <div className="overflow-x-auto">
@@ -36,21 +40,29 @@ export default function PostIndex() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-gray-300">
-                <td className="py-4 px-4">1</td>
-                <td className="py-4 px-4">
-                  <img src="/example-image.jpg" alt="Car Name" className="w-24 rounded-md shadow-sm" />
-                </td>
-                <td className="py-4 px-4">Car Name</td>
-                <td className="py-4 px-4 flex space-x-2">
-                  <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                    Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
-                    Delete
-                  </button>
-                </td>
-              </tr>
+              {posts.map((post) => (
+                <tr key={post.id} className="border-b border-gray-300">
+                  <td className="py-4 px-4">{post.id}</td>
+                  <td className="py-4 px-4">
+                    <Image 
+                      src={post.image} 
+                      alt={`Photo of ${post.title}`} 
+                      width={300} 
+                      height={200} 
+                      className="rounded-lg shadow-lg mb-4" 
+                    />
+                  </td>
+                  <td className="py-4 px-4">{post.title}</td>
+                  <td className="py-4 px-4 flex space-x-2">
+                    <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                      Edit
+                    </button>
+                    <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

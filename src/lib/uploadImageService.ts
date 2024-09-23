@@ -27,7 +27,7 @@ export async function saveImage(image: File): Promise<string> {
   fs.writeFileSync(filePath, buffer);
 
   // Return the file path relative to the public directory
-  return `public/images/${filename}`;
+  return `/images/${filename}`;
 }
 
 export async function deleteImage(fileName:string):Promise<void>{
@@ -73,6 +73,6 @@ export async function updateImage(image:File,oldPath:string): Promise<string> {
   fs.writeFileSync(filePath, buffer);
 
   // Return the file path relative to the public directory
-  return `public/images/${filename}`;
+  return `/images/${filename}`;
 }
 
