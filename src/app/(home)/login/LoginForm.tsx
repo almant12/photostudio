@@ -1,6 +1,6 @@
 // components/LoginForm.js
 'use client';
-
+import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 
 const LoginForm = () => {
@@ -8,6 +8,8 @@ const LoginForm = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [token, setToken] = useState('');
+
+    const router = useRouter()
 
     const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -26,6 +28,7 @@ const LoginForm = () => {
 
             if (res.ok) {
                 setToken(data.token);
+                router.push('/admin/dashboard')
             } else {
                 setError(data.message);
             }
@@ -59,7 +62,7 @@ const LoginForm = () => {
                                     required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="border border-gray-300 text-black rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 />
                             </div>
                         </div>
@@ -75,7 +78,7 @@ const LoginForm = () => {
                                     required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="border border-gray-300 text-black rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 />
                             </div>
                         </div>

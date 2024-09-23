@@ -1,13 +1,15 @@
-"use client"; 
+'use client' 
 
 import React, { useState, useEffect } from 'react'; 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'; // Importo usePathname për të marrë rrugën aktuale
+import { checkAdminStatus } from 'lib/checkAdmin';
 
 const NavBar = () => {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const pathname = usePathname(); // Merr rrugën aktuale
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   // Funksioni për të kontrolluar scroll-in
   const handleScroll = () => {
@@ -20,7 +22,14 @@ const NavBar = () => {
     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
   };
 
+  //here check if the admin is loggin 
+  const checkAdmin = async()=>{
+    const adminLoggedIn = await checkAdminStatus();
+    setIsAdminLoggedIn(adminLoggedIn);
+  }
+
   useEffect(() => {
+    checkAdmin()
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -74,20 +83,27 @@ const NavBar = () => {
         </div>
 
         <div className='flex gap-5 mr-10'>
-          <Link
-            href="/signUp"
-            className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
-          >
-            Sign In
-          </Link>
-
-          <Link
-            href="/login"
-            className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
-          >
-            Login
-          </Link>
-        </div>
+      {isAdminLoggedIn && (
+        <Link
+          href="/admin/dashboard"
+          className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
+        >
+          Dashboard
+        </Link>
+      )}
+      <Link
+        href="/signUp"
+        className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
+      >
+        Sign In
+      </Link>
+      <Link
+        href="/login"
+        className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
+      >
+        Login
+      </Link>
+    </div>
       </nav>
     </header>
   );

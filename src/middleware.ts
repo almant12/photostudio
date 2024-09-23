@@ -32,6 +32,7 @@ export const config = {
         '/api/post',
         '/api/post/update',
         '/api/post/delete',
+        '/admin/:path*',
         
         '/api/user/update',
          '/uploadImages'

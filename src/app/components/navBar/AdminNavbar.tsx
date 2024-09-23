@@ -22,19 +22,17 @@ const AdminNavbar = () => {
               </svg>
             </button>
             <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-              <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                {["Home", "About", "Services", "Pricing", "Contact"].map((item, index) => (
-                  <li key={index}>
-                    <a
-                      href="#"
-                      className={`block py-2 px-3 rounded ${item === "Home" ? "text-white bg-blue-700" : "text-gray-900"} md:p-0 dark:text-white md:dark:text-blue-500 hover:bg-gray-100 md:hover:bg-transparent`}
-                      aria-current={item === "Home" ? "page" : undefined}
-                    >
-                      {item}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <li>
+                    <a href="#" className="block py-2 px-3 rounded text-white md:p-0 dark:text-white md:dark:text-blue-500 hover:bg-gray-100"
+                    aria-current="page"> Home </a>
+                    </li>
+
+                    <li>
+                    <a href="#" className="block py-2 px-3 rounded text-white md:p-0 dark:text-white md:dark:text-blue-500 hover:bg-gray-100"
+                    aria-current="page"> Logout </a>
+                    </li>
+            </ul>
             </div>
           </div>
         </nav>
