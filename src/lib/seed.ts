@@ -22,7 +22,14 @@ async function seed(){
             email:"admin2@gmail.com",
             role:"ADMIN",
             password:bcrypt.hashSync('12345678',8)
-        }
+        },
+        {
+          id:3,
+          name:"User",
+          email:"user1@gmail.com",
+          role:"USER",
+          password:bcrypt.hashSync('12345678',8)
+      }
     ],skipDuplicates:true
 })}
 
