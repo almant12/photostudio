@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 export async function GET() {
     try {
         const users = await prisma.user.findMany({
+          where:{role:"ADMIN"},
             select: {
               id: true,
               name: true,

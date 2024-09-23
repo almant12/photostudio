@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,25 +7,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role{
-ADMIN
-USER
+// Enum për rolet
+enum Role {
+  ADMIN
+  USER
 }
 
 model User {
-  id Int @id @default(autoincrement())
-  name String
-  avatar String?
-  email String @unique
-  password String
-  role Role @default(USER)
-  posts Post[]
+  id        Int           @id @default(autoincrement())
+  name      String
+  avatar    String?
+  email     String        @unique
+  password  String
+  role      Role          @default(USER)
+  posts     Post[]        // Marrëdhënie one-to-many: Një përdorues ka shumë postime
+  subscriptions Subscription[] // Marrëdhënie one-to-many: Një përdorues ka shumë subskribime si subscriber
+  subscribedToAdmin Subscription[] @relation("AdminSubscriptions") // Adminët që përdoruesi ka subskribuar
 }
 
-model Post{
-  id Int @id @default(autoincrement())
-  image String
-  title String
+model Post {
+  id       Int    @id @default(autoincrement())
+  image    String
+  title    String
   authorId Int
-  author User @relation(fields: [authorId],references: [id])
+  author   User   @relation(fields: [authorId], references: [id]) // Many-to-one: Një post ka një autor
+}
+
+// Model për Subskribimet
+model Subscription {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  adminId  Int
+  user     User   @relation(fields: [userId], references: [id]) // Përdoruesi që bën subskribimin (subscriber)
+  admin    User   @relation("AdminSubscriptions", fields: [adminId], references: [id]) // Admini që është subskribuar
 }
