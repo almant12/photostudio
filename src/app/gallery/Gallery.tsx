@@ -82,7 +82,6 @@ const Gallery = () => {
           </div>
         </div>
       </div>
-      <Footer></Footer>
     </div>
   );
 };

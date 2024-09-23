@@ -10,8 +10,6 @@ export default function page() {
         <Background></Background>
         <Text></Text>
         <Album></Album>
-        <Footer></Footer>
-        
     </div>
   )
 }
