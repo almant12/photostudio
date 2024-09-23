@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Background from '../app/album/background';
-import NavBar from "@components/navBar/NavBar";
-import Footer from '../app/components/footer/footer';
-import "./globals.css";
+import NavBar from '../components/navBar/NavBar'
+import Footer from '../components/footer/footer'
+import "../globals.css";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +34,7 @@ export default function RootLayout({
       <div className="flex-grow">
       {children}
       </div>
-      
+
       <Footer />
       </div>
       </body>
