@@ -10,21 +10,25 @@ export const checkAdminStatus = async () => {
   const token = cookieStore.get('Authorization')?.value;
 
   if (!token) {
-      return false; // No token found in cookies
+    return false; // No token found in cookies
   }
 
   try {
-      // Convert to Uint8Array
-      const secretKey = new TextEncoder().encode(JWT_SECRET);
-      
-      // Verify the JWT
-      await jwtVerify(token, secretKey);
-      
-      // If verification succeeds, return true
-      return true;
+    // Convert to Uint8Array
+    const secretKey = new TextEncoder().encode(JWT_SECRET);
+    
+    // Verify the JWT
+    const { payload } = await jwtVerify(token, secretKey);
+    
+    // Check if the user is an admin (assuming 'role' is the field in the payload)
+    if (payload.role === 'ADMIN') {
+      return true; // User is an admin
+    } else {
+      return false; // User is not an admin
+    }
   } catch (error) {
-      console.error('Error verifying token:', error);
-      // If verification fails, return false
-      return false;
+    console.error('Error verifying token:', error);
+    // If verification fails, return false
+    return false;
   }
 };
