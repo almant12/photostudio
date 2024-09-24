@@ -42,7 +42,18 @@ export async function POST(req:NextRequest){
     return NextResponse.json({ errors }, { status: 400 });
   }
 
-  const authenticatedUser = authUser(req);
+  //validate the token
+  const {valid,user} = await authUser();
+  if(!valid){
+    return NextResponse.json({'message':'jwt not valid'},{status:500})
+  }
+
+  const authenticatedUser = user;
+
+  //check the authUser is user Role
+  if(authenticatedUser.role !== 'USER'){
+    return NextResponse.json({'message':'only user role can make request'},{status:400});
+  }
 
   //check admin exist
   const admin = await prisma.user.findUnique({
@@ -55,9 +66,25 @@ export async function POST(req:NextRequest){
 
 
   //check if request id maded  before
+  const subscription = await prisma.subscription.findFirst({
+    where:{
+      userId:parseInt(authenticatedUser.id),
+      adminId:admin.id
+    }
+  })
 
+  if(subscription){
+    return NextResponse.json({ message: 'Request has been made before' }, { status: 409 });
+  }
 
-  //save admin to subscribe user
+  //save the new subscription
+  const newSubscription = await prisma.subscription.create({
+    data:{
+      userId:parseInt(authenticatedUser.id),
+      adminId:admin.id
+    }
+  })
 
+  return NextResponse.json({ message: 'Subscription created successfully', newSubscription });
 
 }

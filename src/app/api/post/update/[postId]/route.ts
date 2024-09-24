@@ -12,7 +12,7 @@ export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
     const postId = parseInt(params.postId);
 
     //pass the req into function for validate the header token and return user payload
-    const {valid,user} = await authUser(req);
+    const {valid,user} = await authUser();
 
     if(!valid || !user){
         return NextResponse.json({'message':'Unauthorizate'},{status:401})

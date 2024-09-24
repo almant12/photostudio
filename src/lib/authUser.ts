@@ -1,10 +1,9 @@
 import { jwtVerify } from 'jose';
-import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export async function authUser(req: NextRequest) {
+export async function authUser() {
     // Get the cookies
     const cookieStore = cookies();
     const token = cookieStore.get('Authorization'); // Retrieve the token from cookies
