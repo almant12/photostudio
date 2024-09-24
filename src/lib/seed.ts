@@ -17,14 +17,21 @@ async function seed(){
             password:bcrypt.hashSync('12345678',8)
         },
         {
-            id:2,
+          id:2,
+          name:"Almant",
+          email:"admin2@gmail.com",
+          role:"ADMIN",
+          password:bcrypt.hashSync('12345678',8)
+      },
+        {
+            id:3,
             name:"Ari",
-            email:"admin2@gmail.com",
-            role:"ADMIN",
+            email:"photo1@gmail.com",
+            role:"PHOTOGRAPH",
             password:bcrypt.hashSync('12345678',8)
         },
         {
-          id:3,
+          id:4,
           name:"User",
           email:"user1@gmail.com",
           role:"USER",
