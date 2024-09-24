@@ -8,16 +8,21 @@ const prisma = new PrismaClient();
 
 export async function GET(){
     
+  const authenticatedUser = (await authUser()).user;
+  if(authenticatedUser.role == 'USER'){
+    return NextResponse.json({'message':"Unauthorizate"},{status:401})
+  }
 
     const subscribe = await prisma.subscription.findMany({
-        where:{adminId:1},
+        where:{adminId:parseInt(authenticatedUser.id)},
         include:{
-            admin:true,
             user:true
         }
     })
+    
+    const users = subscribe.map(subscribe => subscribe.user)
 
-    return NextResponse.json(subscribe);
+    return NextResponse.json({users});
 }
 
 

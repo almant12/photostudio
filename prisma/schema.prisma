@@ -13,16 +13,24 @@ enum Role {
   USER
 }
 
+
+enum Status{
+  NEW_POST
+  SUBSCRIBE
+}
+
 model User {
-  id        Int           @id @default(autoincrement())
-  name      String
-  avatar    String?
-  email     String        @unique
-  password  String
-  role      Role          @default(USER)
-  posts     Post[]        // Marrëdhënie one-to-many: Një përdorues ka shumë postime
-  subscriptions Subscription[] // Marrëdhënie one-to-many: Një përdorues ka shumë subskribime si subscriber
-  subscribedToAdmin Subscription[] @relation("AdminSubscriptions") // Adminët që përdoruesi ka subskribuar
+  id                    Int                    @id @default(autoincrement())
+  name                  String
+  avatar                String?
+  email                 String                 @unique
+  password              String
+  role                  Role                   @default(USER)
+  posts                 Post[]                 // One-to-many relationship: A user has many posts
+  subscriptions         Subscription[]         // One-to-many relationship: A user has many subscriptions as a subscriber
+  subscribedToAdmin     Subscription[]         @relation("AdminSubscriptions") // Admins that the user has subscribed to
+  sentNotifications     Notification[]         @relation("SentNotifications") // Notifications sent by the user
+  receivedNotifications Notification[]         @relation("ReceivedNotifications") // Notifications received by the user
 }
 
 model Post {
@@ -41,3 +49,14 @@ model Subscription {
   user     User   @relation(fields: [userId], references: [id]) // Përdoruesi që bën subskribimin (subscriber)
   admin    User   @relation("AdminSubscriptions", fields: [adminId], references: [id]) // Admini që është subskribuar
 }
+
+model Notification {
+  id         Int       @id @default(autoincrement()) // Identifikuesi i njoftimit
+  status     Status    
+  senderId   Int      
+  receiverId Int      
+
+  sender     User      @relation("SentNotifications", fields: [senderId], references: [id]) // Marrëdhënia me përdoruesin që dërgon njoftimin
+  receiver   User      @relation("ReceivedNotifications", fields: [receiverId], references: [id]) // Marrëdhënia me përdoruesin që merr njoftimin
+}
+

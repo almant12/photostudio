@@ -80,6 +80,14 @@ export async function POST(req:NextRequest) {
           authorId: parseInt(authenticatedUser.id)
         }
       });
+
+      //find all users who has made subscribe to this admin
+      const subscriptions = await prisma.subscription.findMany({
+        where:{adminId: parseInt(authenticatedUser.id)},
+      });
+
+      //push the notification to the user how has made subscribe
+
   
       return NextResponse.json({ post }, { status: 201 });
     } catch (error) {
