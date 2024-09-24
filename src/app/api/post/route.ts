@@ -92,6 +92,7 @@ export async function POST(req:NextRequest) {
           data:{
             status:'NEW_POST',
             senderId:parseInt(authenticatedUser.id),
+            postId:post.id,
             receiverId:subscriptions.userId
           }
          })

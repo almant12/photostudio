@@ -7,17 +7,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enum për rolet
+
 enum Role {
   ADMIN
+  PHOTOGRAPH
   USER
 }
-
 
 enum Status{
   NEW_POST
   SUBSCRIBE
 }
+
 
 model User {
   id                    Int                    @id @default(autoincrement())
@@ -26,41 +27,42 @@ model User {
   email                 String                 @unique
   password              String
   role                  Role                   @default(USER)
-  posts                 Post[]                 // One-to-many relationship: A user has many posts
-  subscriptions         Subscription[]         // One-to-many relationship: A user has many subscriptions as a subscriber
-  subscribedToAdmin     Subscription[]         @relation("AdminSubscriptions") // Admins that the user has subscribed to
-  sentNotifications     Notification[]         @relation("SentNotifications") // Notifications sent by the user
-  receivedNotifications Notification[]         @relation("ReceivedNotifications") // Notifications received by the user
+  posts                 Post[]                
+  subscriptions         Subscription[]         @relation("SenderSubscriptions")
+  receivedSubscriptions  Subscription[]        @relation("ReceiverSubscriptions")
+
+  sentNotifications     Notification[]         @relation("SentNotifications")
+  receivedNotifications Notification[]         @relation("ReceivedNotifications")
+
 }
 
+model Subscription {
+  id         Int      @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+
+  sender     User     @relation("SenderSubscriptions", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceiverSubscriptions", fields: [receiverId], references: [id])
+}
 model Post {
   id         Int         @id @default(autoincrement())
   image      String
   title      String
   authorId   Int
-  author     User        @relation(fields: [authorId], references: [id]) // Një post ka një autor
-  notification Notification? @relation // E lidhur me Notification
+  author     User        @relation(fields: [authorId], references: [id]) 
+  notification Notification? 
 }
 
+
 model Notification {
-  id         Int       @id @default(autoincrement()) // Identifikuesi i njoftimit
+  id         Int       @id @default(autoincrement()) 
   status     Status  
   senderId   Int       
   receiverId Int 
   postId     Int       @unique
 
-  sender     User      @relation("SentNotifications", fields: [senderId], references: [id]) // Marrëdhënia me përdoruesin që dërgon njoftimin
-  receiver   User      @relation("ReceivedNotifications", fields: [receiverId], references: [id]) // Marrëdhënia me përdoruesin që merr njoftimin
-  post       Post      @relation(fields: [postId], references: [id]) // Marrëdhënia me postimin
-}
-
-
-// Model për Subskribimet
-model Subscription {
-  id       Int    @id @default(autoincrement())
-  userId   Int
-  adminId  Int
-  user     User   @relation(fields: [userId], references: [id]) // Përdoruesi që bën subskribimin (subscriber)
-  admin    User   @relation("AdminSubscriptions", fields: [adminId], references: [id]) // Admini që është subskribuar
+  sender     User     @relation("SentNotifications", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedNotifications", fields: [receiverId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id]) 
 }
 
