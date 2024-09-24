@@ -87,7 +87,17 @@ export async function POST(req:NextRequest) {
       });
 
       //push the notification to the user how has made subscribe
+      const notification = subscriptions.map(async (subscriptions) =>{
+        return prisma.notification.create({
+          data:{
+            status:'NEW_POST',
+            senderId:parseInt(authenticatedUser.id),
+            receiverId:subscriptions.userId
+          }
+         })
+      })
 
+      await Promise.all(notification)
   
       return NextResponse.json({ post }, { status: 201 });
     } catch (error) {
