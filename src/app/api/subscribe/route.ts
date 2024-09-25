@@ -29,17 +29,17 @@ export async function GET(){
 export async function POST(req:NextRequest){
 
   const formData = await req.formData();
-  const adminId = formData.get('adminId');
+  const id = formData.get('id');
 
     // Initialize an errors collection
   const errors: { [key: string]: string } = {};
 
   // Check if adminId is provided
-  if (!adminId) {
-    errors.adminId = 'adminId is required';
-  } else if (isNaN(Number(adminId))) {
+  if (!id) {
+    errors.adminId = 'Id is required';
+  } else if (isNaN(Number(id))) {
     // Check if adminId is a number
-    errors.adminId = 'adminId must be a valid number';
+    errors.adminId = 'Id must be a valid number';
   }
 
   // If there are errors, return them in the response
@@ -55,20 +55,17 @@ export async function POST(req:NextRequest){
 
   const authenticatedUser = user;
 
-  //check the authUser is user Role
-  if(authenticatedUser.role !== 'USER'){
-    return NextResponse.json({'message':'only user role can make request'},{status:400});
-  }
-
   //check admin exist
-  const admin = await prisma.user.findUnique({
-    where:{id:parseInt(adminId)}
+  const userExist = await prisma.user.findUnique({
+    where:{id:parseInt(id)}
   });
 
-  if(!admin || admin.role !== 'ADMIN'){
+  if(!userExist){
     return NextResponse.json({'message':"Admin not found",},{status:404});
   }
-
+  if(userExist.role === 'USER'){
+    return NextResponse.json({'message':'User can not be subscribe'})
+  }
 
   //check if request id maded  before
   const subscription = await prisma.subscription.findFirst({
