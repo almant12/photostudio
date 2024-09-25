@@ -39,6 +39,7 @@ export async function POST(req:NextRequest) {
     const authenticatedUser = user;
     
     const title = formData.get('title') as string;
+    const description = formData.get('description') as string;
     const image = formData.get('image') as File;
   
     // Validation errors collection
@@ -53,6 +54,13 @@ export async function POST(req:NextRequest) {
       errors.title = "Title must not exceed 255 characters.";
     }
   
+    if (!description) {
+      errors.title = "description is required.";
+    } else if (title.length < 3) {
+      errors.title = "description must be at least 3 characters.";
+    } else if (title.length > 1000) {
+      errors.title = "description must not exceed 1000 characters.";
+    }
   
     // Validate image
     if (!image) {
@@ -76,14 +84,15 @@ export async function POST(req:NextRequest) {
       const post = await prisma.post.create({
         data: {
           title: title,
+          description:description,
           image: imagePath,
           authorId: parseInt(authenticatedUser.id)
         }
       });
 
-      //find all users who has made subscribe to this admin
+      //find all users who has made subscribe to this user
       const subscriptions = await prisma.subscription.findMany({
-        where:{adminId: parseInt(authenticatedUser.id)},
+        where:{receiverId: parseInt(authenticatedUser.id)},
       });
 
       //push the notification to the user how has made subscribe
@@ -93,7 +102,7 @@ export async function POST(req:NextRequest) {
             status:'NEW_POST',
             senderId:parseInt(authenticatedUser.id),
             postId:post.id,
-            receiverId:subscriptions.userId
+            receiverId:subscriptions.senderId
           }
          })
       })
