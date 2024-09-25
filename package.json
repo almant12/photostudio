@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "checkout": "ts-node src/scripts/branchGit.ts",
     "seed": "ts-node src/scripts/seed.ts",
     "dev": "next dev",
     "build": "next build",
@@ -25,6 +26,7 @@
     "postcss-loader": "^8.1.1",
     "react": "^18",
     "react-dom": "^18",
+    "simple-git": "^3.27.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
