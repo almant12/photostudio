@@ -9,18 +9,15 @@ const prisma = new PrismaClient();
 export async function GET(){
     
   const authenticatedUser = (await authUser()).user;
-  if(authenticatedUser.role == 'USER'){
-    return NextResponse.json({'message':"Unauthorizate"},{status:401})
-  }
 
     const subscribe = await prisma.subscription.findMany({
-        where:{adminId:parseInt(authenticatedUser.id)},
+        where:{senderId:parseInt(authenticatedUser.id)},
         include:{
-            user:true
+          sender:true
         }
     })
     
-    const users = subscribe.map(subscribe => subscribe.user)
+    const users = subscribe.map(subscribe => subscribe.sender)
 
     return NextResponse.json({users});
 }
@@ -84,8 +81,8 @@ export async function POST(req:NextRequest){
   //save the new subscription
   const newSubscription = await prisma.subscription.create({
     data:{
-      userId:parseInt(authenticatedUser.id),
-      adminId:admin.id
+      senderId:parseInt(authenticatedUser.id),
+      receiverId:parseInt(receiverId)
     }
   })
 
