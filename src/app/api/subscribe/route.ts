@@ -29,15 +29,15 @@ export async function GET(){
 export async function POST(req:NextRequest){
 
   const formData = await req.formData();
-  const id = formData.get('id');
+  const receiverId = formData.get('receiverId');
 
     // Initialize an errors collection
   const errors: { [key: string]: string } = {};
 
   // Check if adminId is provided
-  if (!id) {
+  if (!receiverId) {
     errors.adminId = 'Id is required';
-  } else if (isNaN(Number(id))) {
+  } else if (isNaN(Number(receiverId))) {
     // Check if adminId is a number
     errors.adminId = 'Id must be a valid number';
   }
@@ -57,7 +57,7 @@ export async function POST(req:NextRequest){
 
   //check admin exist
   const userExist = await prisma.user.findUnique({
-    where:{id:parseInt(id)}
+    where:{id:parseInt(receiverId)}
   });
 
   if(!userExist){
@@ -67,13 +67,15 @@ export async function POST(req:NextRequest){
     return NextResponse.json({'message':'User can not be subscribe'})
   }
 
-  //check if request id maded  before
+  //check if request id maded before
   const subscription = await prisma.subscription.findFirst({
-    where:{
-      userId:parseInt(authenticatedUser.id),
-      adminId:admin.id
+    where: {
+      OR: [
+        { senderId: parseInt(authenticatedUser.id), receiverId: parseInt(receiverId) },
+        { senderId: parseInt(receiverId), receiverId: parseInt(authenticatedUser.id) }
+      ]
     }
-  })
+  });
 
   if(subscription){
     return NextResponse.json({ message: 'Request has been made before' }, { status: 409 });
