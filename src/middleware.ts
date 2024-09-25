@@ -31,6 +31,7 @@ export async function middleware(req: NextRequest) {
             // Allow access to admin routes
             return NextResponse.next();
         }
+    
 
         // Logic for other routes (e.g., user routes)
         if (payload.role === 'USER') {
