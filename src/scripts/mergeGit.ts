@@ -25,7 +25,7 @@ const mergeBranchById = async (id: string): Promise<void> => {
 
         // merge the branch
         const response = await git.merge(branch);
-        console.log(`Switched to branch: ${branch}`);
+        console.log(`merge branch: ${branch}`);
         console.log('Checkout response:',response);
     } catch (error) {
         console.error('Error while checking out branch:', error);
