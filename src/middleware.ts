@@ -41,6 +41,7 @@ export async function middleware(req: NextRequest) {
 
         // Allow access to other routes for ADMIN or if no role is required
         return NextResponse.next();
+        
 
     } catch (error) {
         console.error('JWT Verification Error:', error);
