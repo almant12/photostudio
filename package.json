@@ -5,6 +5,7 @@
   "scripts": {
     "checkout": "ts-node src/scripts/branchGit.ts",
     "push":"ts-node src/scripts/pushGit.ts",
+    "merge":"ts-node src/scripts/mergeGit.ts",
     "seed": "ts-node src/scripts/seed.ts",
     "dev": "next dev",
     "build": "next build",
