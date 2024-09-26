@@ -87,7 +87,7 @@ export async function POST(req:NextRequest) {
         where:{receiverId: parseInt(authenticatedUser.id)},
       });
 
-      //push the notification to the user how has made subscribe
+      //push the notification to the user who has made subscribe
       const notification = subscriptions.map(async (subscriptions) =>{
         return prisma.notification.create({
           data:{
