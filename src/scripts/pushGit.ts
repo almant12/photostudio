@@ -24,7 +24,7 @@ const pushGitById = async (id: string): Promise<void> => {
         }
 
         // Checkout the found branch
-        await git.push(branch);
+        await git.push('origin',branch);
         console.log(`push the branch: ${branch}`);
     } catch (error) {
         console.error('Error while checking out branch:', error);
