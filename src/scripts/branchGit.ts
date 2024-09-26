@@ -16,7 +16,7 @@ const checkoutBranchById = async (id: string): Promise<void> => {
             console.log(`Branch with ID ${id} not found.`);
             console.log('Available branches:');
             branches.all.forEach((branchName: string) => {
-                if (!branchName.startsWith('remotes/')) { // Exclude remote branches
+                if (!branchName.startsWith('remotes/')) { 
                     console.log(branchName);
                 }
             });
