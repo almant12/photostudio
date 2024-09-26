@@ -54,14 +54,6 @@ export async function POST(req:NextRequest) {
       errors.title = "Title must not exceed 255 characters.";
     }
   
-    if (!description) {
-      errors.title = "description is required.";
-    } else if (title.length < 3) {
-      errors.title = "description must be at least 3 characters.";
-    } else if (title.length > 1000) {
-      errors.title = "description must not exceed 1000 characters.";
-    }
-  
     // Validate image
     if (!image) {
       errors.image = "Image is required.";
