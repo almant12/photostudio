@@ -8,27 +8,24 @@ import { deleteImage } from "lib/uploadImageService";
 
 const prisma = new PrismaClient();
 
-export async function PUT(req:NextRequest,{params}:{params:{userId:string}}){
+export async function PUT(req:NextRequest){
     
     const formData = await req.formData();
-    const userId = parseInt(params.userId);
-
-    const {valid,user} = await authUser(req);
+    const {valid,user} = await authUser();
 
     if(!valid || !user){
         return NextResponse.json({'message':'Unauthorizate'},{status:401});
     }
-
     const authenticateUser = user;
+
     //check if user exist
     const userExist = await prisma.user.findUnique({
-        where:{id:userId},
+        where:{id:parseInt(authenticateUser.id)},
     }) as {id:number,avatar: string} | null;
 
     if(!userExist){
         return NextResponse.json({'message':'User Not Found'},{status:404});
     }
-
 
     if(userExist.id !== parseInt(authenticateUser.id)){
         return NextResponse.json({'message':'Unauthorized to update this user'},{status:403});
@@ -71,7 +68,7 @@ export async function PUT(req:NextRequest,{params}:{params:{userId:string}}){
 
         //update the user
         const updateUser = await prisma.user.update({
-            where:{id:userId},
+            where:{id:parseInt(authenticateUser.id)},
             data:{
                 name:name,
                 avatar:avatarPath
