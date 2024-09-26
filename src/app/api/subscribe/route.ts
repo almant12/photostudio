@@ -67,10 +67,7 @@ export async function POST(req:NextRequest){
   //check if request id maded before
   const subscription = await prisma.subscription.findFirst({
     where: {
-      OR: [
-        { senderId: parseInt(authenticatedUser.id), receiverId: parseInt(receiverId) },
-        { senderId: parseInt(receiverId), receiverId: parseInt(authenticatedUser.id) }
-      ]
+      senderId: parseInt(authenticatedUser.id), receiverId: parseInt(receiverId)
     }
   });
 
