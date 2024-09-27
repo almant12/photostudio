@@ -2,6 +2,7 @@
 'use client';
 import { useRouter } from 'next/navigation'
 import { useState } from 'react';
+import * as jose from 'jose';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -27,10 +28,24 @@ const LoginForm = () => {
             const data = await res.json();
 
             if (res.ok) {
-                setToken(data.token);
-                router.push('/admin/dashboard')
+                const jwtToken = data.token;
+                setToken(jwtToken);
+
+                // Decode the token to get the user's role
+                const decodedToken = jose.decodeJwt(jwtToken);
+
+                // Redirect based on the user's role
+                if (decodedToken.role === 'ADMIN') {
+                    router.push('/admin/dashboard'); // Redirect admin to admin dashboard
+                }else if(decodedToken.role === 'PHOTOGRAPH'){
+                    router.push('/photograph/dashboard')
+                } else if (decodedToken.role === 'USER') {
+                    router.push('/home'); // Redirect user to user home page
+                } else {
+                    router.push('/'); // Fallback to a default route if no role found
+                }
             } else {
-                setError(data.message);
+                setError(data.message); // Display error message from API
             }
         } catch (err) {
             setError('An error occurred while connecting to the server.');

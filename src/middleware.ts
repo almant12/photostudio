@@ -6,40 +6,37 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname;
-    const adminRoutes = ['/admin/:path*']; // Only /admin/* routes need protection
-
-    // Check for cookie
+    
+    // Get the 'Authorization' cookie
     const cookie = cookies().get('Authorization');
-
-    // Validate JWT
     if (!cookie) {
         return NextResponse.redirect(new URL('/login', req.url));
     }
-
+    
     const secret = new TextEncoder().encode(JWT_SECRET);
     const jwt = cookie.value;
 
     try {
+        // Verify the JWT token
         const { payload } = await jose.jwtVerify(jwt, secret, {});
 
-        // Check if the user is trying to access admin routes
-        if (adminRoutes.some(route => pathname.startsWith(route))) {
+        // Protect admin routes
+        if (pathname.startsWith('/admin')) {
             if (payload.role !== 'ADMIN') {
-                // If the user is not an admin, redirect them
-                return NextResponse.redirect(new URL('/unauthorized', req.url)); // Redirect to an unauthorized page
+                // Redirect non-admin users trying to access admin routes
+                return NextResponse.redirect(new URL('/unauthorized', req.url)); // Redirect to unauthorized page
             }
-            // Allow access to admin routes
-            return NextResponse.next();
-        }
-    
-
-        // Logic for other routes (e.g., user routes)
-        if (payload.role === 'USER') {
-            // Redirect user to client page if accessing admin routes
-            return NextResponse.redirect(new URL('/', req.url)); // Replace '/client' with the actual client page path
         }
 
-        // Allow access to other routes for ADMIN or if no role is required
+        // Protect photograph routes
+        if (pathname.startsWith('/photograph')) {
+            if (payload.role !== 'PHOTOGRAPH') {
+                // Redirect non-photograph users trying to access photograph routes
+                return NextResponse.redirect(new URL('/unauthorized', req.url)); // Redirect to unauthorized page
+            }
+        }
+
+        // Allow access for all other roles and paths
         return NextResponse.next();
 
     } catch (error) {
@@ -50,12 +47,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
     matcher: [
-        '/api/logout',
-        '/api/post',
-        '/api/post/update',
-        '/api/post/delete',
-        '/admin/:path*',
-        '/api/user/update',
-        '/uploadImages',
+        '/admin/:path*',        // Protect all /admin routes
+        '/photograph/:path*',   // Protect all /photograph routes
     ],
 };
