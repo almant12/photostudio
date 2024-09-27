@@ -13,14 +13,13 @@ export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
 
     //pass the req into function for validate the header token and return user payload
     const {valid,user} = await authUser();
-
     if(!valid || !user){
-        return NextResponse.json({'message':'Unauthorizate'},{status:401})
+      return NextResponse.json({'message':'Unauthorizate'},{status:401})
     }
-
-    const authenticatedUser = user;
-
-  
+    if(user.role !== 'ADMIN'){
+      return NextResponse.json({'message':'Forbbiden'},{status:403})
+    }
+      
     //check if the post exist
     const postExist = await prisma.post.findUnique({
         where: { id: postId },
@@ -28,12 +27,6 @@ export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
 
     if(!postExist){
         return NextResponse.json({'message':'Post Not Found'},{status:404});
-    }
-
-
-    //check if the authenticate user is the author of the post
-    if (postExist.authorId !== parseInt(authenticatedUser.id)){
-        return NextResponse.json({'message':'Unauthorized to update this post'},{status:403});
     }
 
     
@@ -51,8 +44,7 @@ export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
     } else if (title.length > 255) {
       errors.title = "Title must not exceed 255 characters.";
     }
-  
-  
+    
     // Validate image
     if (!image) {
       errors.image = "Image is required.";
