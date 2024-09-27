@@ -91,6 +91,15 @@ const NavBar = () => {
           Dashboard
         </Link>
       )}
+     <Link
+  href="/signUp"
+  className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out relative"
+>
+  Notification
+  <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+    3
+  </span>
+</Link>
       <Link
         href="/signUp"
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
