@@ -1,13 +1,17 @@
 import { NextResponse,NextRequest } from "next/server";
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 export async function GET() {
     try {
         const users = await prisma.user.findMany({
-          where:{role:"ADMIN"},
+          where: {
+            OR: [
+                { role: "ADMIN" },
+                { role: "PHOTOGRAPH" }
+            ]
+        },
             select: {
               id: true,
               name: true,
