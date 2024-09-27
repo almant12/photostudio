@@ -58,7 +58,7 @@ export async function POST(req:NextRequest){
   });
 
   if(!userExist){
-    return NextResponse.json({'message':"Admin not found",},{status:404});
+    return NextResponse.json({'message':"User not found",},{status:404});
   }
   if(userExist.role === 'USER'){
     return NextResponse.json({'message':'User can not be subscribe'})
