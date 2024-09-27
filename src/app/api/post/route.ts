@@ -35,6 +35,9 @@ export async function POST(req:NextRequest) {
     if(!valid || !user){
         return NextResponse.json({'message':'Unauthorizate'},{status:401})
     }
+    if(user.role === 'USER'){
+      return NextResponse.json({'message':'Forbidden'},{status:403})
+    }
 
     const authenticatedUser = user;
     
