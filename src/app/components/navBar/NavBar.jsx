@@ -8,8 +8,8 @@ import { checkAdminStatus } from 'lib/checkAdmin';
 const NavBar = () => {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const pathname = usePathname(); // Merr rrugën aktuale
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   // Funksioni për të kontrolluar scroll-in
   const handleScroll = () => {
@@ -22,28 +22,21 @@ const NavBar = () => {
     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
   };
 
-  //here check if the admin is loggin 
-  const checkAdmin = async()=>{
-    const adminLoggedIn = await checkAdminStatus();
-    setIsAdminLoggedIn(adminLoggedIn);
-  }
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const adminLoggedIn = await checkAdminStatus();
+      setIsAdminLoggedIn(adminLoggedIn);
+    };
+  
+    checkAdmin();
+  }, []);
 
   useEffect(() => {
-    checkAdmin()
     window.addEventListener('scroll', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lastScrollTop]);
-
-  // Lista e rrugëve ku navbar duhet të fshihet
-  const hideOnPaths = ['/login', '/signUp']; // Rrugët ku navbar nuk shfaqet
-  const shouldHideNav = hideOnPaths.includes(pathname);
-
-  // Nëse jemi në një nga faqet e përcaktuara, mos shfaq navbar
-  if (shouldHideNav) {
-    return null;
-  }
 
   return (
     <header className={`fixed left-0 right-0 py-4 z-50 font-mono transition-transform duration-300 ${showNav ? 'translate-y-0' : '-translate-y-full'}`}>
