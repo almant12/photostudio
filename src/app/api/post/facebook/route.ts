@@ -1,8 +1,9 @@
 import { authUser } from "lib/authUser";
 import { NextRequest, NextResponse } from "next/server";
-import { saveFacebookImage} from "lib/uploadImageService";
+import { saveFacebookImage,deleteImage} from "lib/uploadImageService";
+import { PrismaClient } from '@prisma/client';
 
-
+const prisma = new PrismaClient();
 const API_KEY = process.env.API_KEY
 export async function POST(req:NextRequest){
     const formData = await req.formData();
@@ -46,7 +47,7 @@ export async function POST(req:NextRequest){
 
     //filter the id of pathUrl
     const postId = extractFbid(postUrl);
-
+    let imagePath:string | null = null;
 
     try{
         //fetch data from api facebook
@@ -59,12 +60,46 @@ export async function POST(req:NextRequest){
     const imageResponse = await fetch(imageUrl);
     const arrayBuffer = await imageResponse.arrayBuffer();
 
-    // Save the image using your new function
-    const relativePath = await saveFacebookImage(arrayBuffer);
+    // Save the image to the public directory
+    imagePath = await saveFacebookImage(arrayBuffer);
 
-        return NextResponse.json(relativePath);
-    }catch(error){
-        console.log(error);
+    //store the post in database
+    const post = await prisma.post.create({
+      data:{
+        title:title,
+        description:description||null,
+        image:imagePath,
+        authorId:parseInt(authenticatedUser.id)
+      }
+    });
+
+    //find all users who has made subscribe to this user
+    const subscriptions = await prisma.subscription.findMany({
+      where:{receiverId: parseInt(authenticatedUser.id)},
+    });
+
+    //push the notification to the user who has made subscribe
+    const notification = subscriptions.map(async (subscriptions) =>{
+      return prisma.notification.create({
+        data:{
+          status:'NEW_POST',
+          senderId:parseInt(authenticatedUser.id),
+          postId:post.id,
+          receiverId:subscriptions.senderId
+        }
+       })
+    })
+
+    await Promise.all(notification)
+
+    return NextResponse.json({ post }, { status: 201 });
+    }catch (error) {
+      // If imagePath is not null, delete the image
+      if (imagePath) {
+        deleteImage(imagePath);
+      }
+  
+      return NextResponse.json({ 'message': error.message}, { status: 500 });
     }
 
 }
