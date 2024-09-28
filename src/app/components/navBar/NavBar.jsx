@@ -9,6 +9,7 @@ const NavBar = () => {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isPhotographLoggedIn,setIsPhotographLoggedIn] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   // Funksioni për të kontrolluar scroll-in
@@ -22,14 +23,11 @@ const NavBar = () => {
     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
   };
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      const adminLoggedIn = await checkAdminStatus();
-      setIsAdminLoggedIn(adminLoggedIn);
-    };
-  
-    checkAdmin();
-  }, []);
+  //here check if the admin is loggin 
+  const checkUser = async()=>{
+    const adminLoggedIn = await checkAdminStatus();
+    setIsAdminLoggedIn(adminLoggedIn);
+  }
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
