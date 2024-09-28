@@ -7,6 +7,7 @@ import { Role } from '@prisma/client';
 
 const NavBar = () => {
   const [isOpen,setIsOpen] = useState(false)
+  const [notification,setNotification] = useState([]);
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -24,6 +25,30 @@ const NavBar = () => {
     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
   };
 
+  //fetch notification
+  const fetchNotification = async () => {
+    try {
+      const response = await fetch('/api/notification', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setNotification(data);
+      } else {
+        const errorData = await response.json();
+        if (response.status === 401) {
+          console.error('Unauthorized:', errorData.message);
+        } else {
+          console.error('Error:', errorData.message); 
+        }
+      }
+    } catch (error) {
+      console.error('Fetch error:', error); 
+    }
+  };
+
   //check the role of the user
   const checkUser = async()=>{
     const userAuth = (await authUser()).user;
@@ -38,6 +63,7 @@ const NavBar = () => {
 
   useEffect(()=>{
     checkUser();
+  fetchNotification()
   },[])
 
   useEffect(() => {
@@ -97,20 +123,18 @@ const NavBar = () => {
           Dashboard
         </Link>
       )}
-    <div class="relative inline-block text-left">
-  <div>
-    <button type="button" onClick={toggleDropdown} class="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">
+    <div classname="relative inline-block text-left">
+    <button type="button" onClick={toggleDropdown} classname="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">
       Notification
     </button>
-  </div>
   {isOpen &&(
-    <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-    <div class="py-1" role="none">
-      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
-      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
-      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
+    <div classname="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <div classname="py-1" role="none">
+      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
+      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
+      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
       <form method="POST" action="#" role="none">
-        <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+        <button type="submit" classname="block w-full px-4 py-2 text-left text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
       </form>
     </div>
   </div>
