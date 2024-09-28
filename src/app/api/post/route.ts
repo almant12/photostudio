@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 import { saveImage,deleteImage } from 'image-handler-almant'
 import { authUser } from "lib/authUser";
 
-
 const prisma = new PrismaClient();
 
 

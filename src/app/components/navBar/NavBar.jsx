@@ -6,6 +6,7 @@ import { authUser } from 'lib/authUser';
 import { Role } from '@prisma/client';
 
 const NavBar = () => {
+  const [isOpen,setIsOpen] = useState(false)
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -45,6 +46,10 @@ const NavBar = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, [lastScrollTop]);
+
+  const toggleDropdown = ()=>{
+    setIsOpen(!isOpen)
+  }
 
   return (
     <header className={`fixed left-0 right-0 py-4 z-50 font-mono transition-transform duration-300 ${showNav ? 'translate-y-0' : '-translate-y-full'}`}>
@@ -92,15 +97,25 @@ const NavBar = () => {
           Dashboard
         </Link>
       )}
-     <Link
-  href="/signUp"
-  className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out relative"
->
-  Notification
-  <span className="bg-red-500 text-white rounded-full px-2 py-1 text-xs absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
-    3
-  </span>
-</Link>
+    <div class="relative inline-block text-left">
+  <div>
+    <button type="button" onClick={toggleDropdown} class="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">
+      Notification
+    </button>
+  </div>
+  {isOpen &&(
+    <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <div class="py-1" role="none">
+      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
+      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
+      <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
+      <form method="POST" action="#" role="none">
+        <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
+      </form>
+    </div>
+  </div>
+  )}
+</div>
       <Link
         href="/signUp"
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
