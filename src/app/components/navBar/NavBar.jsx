@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'; 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // Importo usePathname për të marrë rrugën aktuale
-import { checkAdminStatus } from 'lib/checkAdmin';
+import { authUser } from 'lib/authUser';
+import { Role } from '@prisma/client';
 
 const NavBar = () => {
   const [showNav, setShowNav] = useState(true);
@@ -23,11 +23,21 @@ const NavBar = () => {
     setLastScrollTop(currentScroll <= 0 ? 0 : currentScroll);
   };
 
-  //here check if the admin is loggin 
+  //check the role of the user
   const checkUser = async()=>{
-    const adminLoggedIn = await checkAdminStatus();
-    setIsAdminLoggedIn(adminLoggedIn);
+    const userAuth = (await authUser()).user;
+    if(userAuth?.role === Role.ADMIN){
+      setIsAdminLoggedIn(true)
+    }else if(userAuth?.role === Role.PHOTOGRAPH){
+      setIsPhotographLoggedIn(true)
+    }else if(userAuth?.role === Role.USER){
+      setIsUserLoggedIn(true)
+    }
   }
+
+  useEffect(()=>{
+    checkUser();
+  },[])
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
