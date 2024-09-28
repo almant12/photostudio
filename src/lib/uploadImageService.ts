@@ -30,7 +30,7 @@ export async function saveImage(image: File): Promise<string> {
   return `/images/${filename}`;
 }
 
-export async function saveFacebookImage(image: ArrayBuffer): Promise<string> {
+export async function saveFacebookImage(image: any): Promise<string> {
   try {
     // Ensure the uploads directory exists
     const uploadsDir = path.join(process.cwd(), 'public', 'images');
@@ -45,7 +45,8 @@ export async function saveFacebookImage(image: ArrayBuffer): Promise<string> {
     const filePath = path.join(uploadsDir, filename);
 
     // Convert the ArrayBuffer into a Buffer
-    const buffer = Buffer.from(image); // Directly convert the ArrayBuffer to Buffer
+    const arrayBuffer = await image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer); // Directly convert the ArrayBuffer to Buffer
 
     // Save the file to the public/uploads directory
     await fs.writeFileSync(filePath, buffer);

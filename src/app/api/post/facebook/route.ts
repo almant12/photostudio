@@ -1,6 +1,6 @@
 import { authUser } from "lib/authUser";
 import { NextRequest, NextResponse } from "next/server";
-import { saveFacebookImage,deleteImage} from "lib/uploadImageService";
+import { saveFacebookImage,deleteImage} from "image-handler-almant";
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -56,12 +56,8 @@ export async function POST(req:NextRequest){
         });
         const data = await response.json();
         const imageUrl = data.images[0].source;
-        
-    const imageResponse = await fetch(imageUrl);
-    const arrayBuffer = await imageResponse.arrayBuffer();
-
     // Save the image to the public directory
-    imagePath = await saveFacebookImage(arrayBuffer);
+    imagePath = await saveFacebookImage(imageUrl);
 
     //store the post in database
     const post = await prisma.post.create({
