@@ -64,6 +64,7 @@ const HeroSection = () => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
   }, []);
 
+  
   const handleSubscribe = async(userId:string)=>{
     try{
       const response = await fetch('api/subscribe/'+userId,{
