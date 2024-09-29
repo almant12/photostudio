@@ -17,6 +17,7 @@ export async function GET() {
               name: true,
               avatar: true,
               email: true,
+              role:true,
             },
           });
         return NextResponse.json({users},{status:200});
