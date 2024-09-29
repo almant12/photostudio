@@ -66,13 +66,11 @@ const HeroSection = () => {
 
   const handleSubscribe = async(userId:string)=>{
     try{
-      const response = await fetch('api/subscribe',{
+      const response = await fetch('api/subscribe/'+userId,{
         method:'POST',
         headers: {
           'Content-Type': 'application/json', // Ensure the request is sent as JSON
-        },body:JSON.stringify({
-          receiverId: parseInt(userId), 
-        }),
+        }
       })
       if(response.ok){
         setSubscribeUser((prev)=>[...prev,parseInt(userId)])
