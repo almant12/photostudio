@@ -13,11 +13,11 @@ export async function GET(){
     const subscribe = await prisma.subscription.findMany({
         where:{senderId:parseInt(authenticatedUser.id)},
         include:{
-          sender:true
+          receiver:true
         }
     })
     
-    const users = subscribe.map(subscribe => subscribe.sender)
+    const users = subscribe.map(subscribe => subscribe.receiver)
 
     return NextResponse.json({users});
 }

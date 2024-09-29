@@ -12,6 +12,37 @@ const HeroSection = () => {
 
   const [users,setUser] = useState([]);
   const [userAuth, setUserAuth] = useState<{ valid: boolean; user: any } | null>(null);
+  const [subscribeUsers,setSubscribeUser] = useState([]);
+
+  useEffect(() => {
+    // Check if user is authenticated
+    if (userAuth?.valid) {
+      const fetchSubscribeUsers = async () => {
+        try {
+          const response = await fetch('/api/subscribe', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          });
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch subscribed users");
+          }
+
+          const data = await response.json();
+          setSubscribeUser(data.users); // Update state with fetched users
+        } catch (error) {
+          console.error("Error fetching subscriptions:", error);
+        }
+      };
+
+      fetchSubscribeUsers(); // Fetch subscribed users only if authenticated
+    }
+  }, [userAuth]); // The effect will run whenever userAuth changes
+
+
+  useEffect(() => {
+    console.log('Updated subscribeUsers:', subscribeUsers); // Log state after update
+  }, [subscribeUsers]);
 
   const fetchUsers = async () => {
     try {
@@ -31,8 +62,9 @@ const HeroSection = () => {
       console.error('Error fetching users:', error);
     }
   };
+
+  // fetch authUser
   useEffect(() => {
-    // Define an async function to call authUser
     const authenticateUser = async () => {
         const authResult = await authUser();
         setUserAuth(authResult);
@@ -40,9 +72,11 @@ const HeroSection = () => {
     authenticateUser();
 }, []);
 
+  // fetch all admin & photograph users
   useEffect(()=>{
     fetchUsers();
   },[])
+
   useEffect(() => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
   }, []);
