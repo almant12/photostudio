@@ -2,6 +2,8 @@ import { NextResponse,NextRequest } from "next/server";
 import { PrismaClient } from '@prisma/client';
 import { saveImage,deleteImage } from 'image-handler-almant'
 import { authUser } from "lib/authUser";
+import Pusher from "pusher";
+import pusher from "lib/pusher";
 
 const prisma = new PrismaClient();
 
@@ -89,19 +91,28 @@ export async function POST(req:NextRequest) {
         where:{receiverId: parseInt(authenticatedUser.id)},
       });
 
-      //push the notification to the user who has made subscribe
-      const notification = subscriptions.map(async (subscriptions) =>{
-        return prisma.notification.create({
-          data:{
-            status:'NEW_POST',
-            senderId:parseInt(authenticatedUser.id),
-            postId:post.id,
-            receiverId:subscriptions.senderId
-          }
-         })
-      })
+        const notifications = subscriptions.map(async (subscription) => {
+      const notification = await prisma.notification.create({
+        data: {
+          status: 'NEW_POST',
+          senderId: parseInt(authenticatedUser.id),
+          postId: post.id,
+          receiverId: subscription.senderId
+        }
+      });
 
-      await Promise.all(notification)
+      // Trigger Pusher event for real-time notification
+      await pusher.trigger(`user-${subscription.senderId}`, 'new-post', {
+        postId: post.id,
+        title: post.title,
+        description: post.description,
+        image: post.image,
+      });
+
+      return notification;
+    });
+
+      await Promise.all(notifications)
   
       return NextResponse.json({ post }, { status: 201 });
     } catch (error) {

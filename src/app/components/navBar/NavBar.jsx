@@ -7,7 +7,7 @@ import { Role } from '@prisma/client';
 
 const NavBar = () => {
   const [isOpen,setIsOpen] = useState(false)
-  const [notification,setNotification] = useState([]);
+  const [notifications,setNotification] = useState([]);
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -75,6 +75,7 @@ const NavBar = () => {
 
   const toggleDropdown = ()=>{
     setIsOpen(!isOpen)
+    console.log(notifications)
   }
 
   return (
@@ -123,22 +124,48 @@ const NavBar = () => {
           Dashboard
         </Link>
       )}
-    <div classname="relative inline-block text-left">
-    <button type="button" onClick={toggleDropdown} classname="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">
+    <div className="relative inline-block text-left">
+    <button type="button" onClick={toggleDropdown} className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">
       Notification
     </button>
-  {isOpen &&(
-    <div classname="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-    <div classname="py-1" role="none">
-      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Account settings</a>
-      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
-      <a href="#" classname="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">License</a>
-      <form method="POST" action="#" role="none">
-        <button type="submit" classname="block w-full px-4 py-2 text-left text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-3">Sign out</button>
-      </form>
+    {isOpen && (
+  <div className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+    <div className="py-1" role="none">
+      {notifications.length === 0 ? (
+        <p className="text-base">No Notification</p>
+      ) : (
+        notifications.map((notification) => {
+          // Conditionally render based on the notification status
+          return notification.status === 'NEW_POST' ? (
+            <Link
+              href={'/post/' + notification.postId}
+              className="block px-4 py-2 text-sm text-gray-700"
+              role="menuitem"
+              tabIndex="-1"
+              id="menu-item-0"
+              key={notification.id}
+            >
+              New Post: {notification.postTitle} by {notification.sender.name}
+            </Link>
+          ) : (
+            notification.status === 'SUBSCRIBE' && (
+              <p
+                className="block px-4 py-2 text-sm text-gray-700"
+                role="menuitem"
+                tabIndex="-1"
+                id="menu-item-1"
+                key={notification.id}
+              >
+                New Subscriber: {notification.subscriberName}
+              </p>
+            )
+          );
+        })
+      )}
     </div>
   </div>
-  )}
+)}
+
 </div>
       <Link
         href="/signUp"
