@@ -7,12 +7,13 @@ import Image from "next/image";
 import Background from '../image/background1.jpg';
 import { scrollAnimation } from "../heroSection/scrollAnimation"; // Importo animacionin
 import { authUser } from "lib/authUser";
+import SubscribeButton from "@components/buttons/SubscribeButton";
 
 const HeroSection = () => {
 
   const [users,setUser] = useState([]);
   const [userAuth, setUserAuth] = useState<{ valid: boolean; user: any } | null>(null);
-  const [subscribeUsers,setSubscribeUser] = useState([]);
+  const [subscribeUsers, setSubscribeUser] = useState<number[]>([]);
 
   const fetchUsers = async () => {
     try {
@@ -48,7 +49,8 @@ const HeroSection = () => {
             throw new Error("Failed to fetch subscribed users");
           }
           const data = await response.json();
-          setSubscribeUser(data.users); // Update state with fetched subscribed users
+          const subscribedUserIds = data.users.map((user:any)=>user.id)
+          setSubscribeUser(subscribedUserIds); // Update state with fetched subscribed users
         } catch (error) {
           console.error("Error fetching subscriptions:", error);
         }
@@ -61,6 +63,24 @@ const HeroSection = () => {
   useEffect(() => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
   }, []);
+
+  const handleSubscribe = async(userId:string)=>{
+    try{
+      const response = await fetch('api/subscribe',{
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json', // Ensure the request is sent as JSON
+        },body:JSON.stringify({
+          receiverId: userId, 
+        }),
+      })
+      if(response.ok){
+        setSubscribeUser((prev)=>[...prev,parseInt(userId)])
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   return (
     <div className="bg-cover bg-center text-center backdrop-opacity-10 backdrop-invert bg-white/30 opacity-80 linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)" 
@@ -107,9 +127,12 @@ const HeroSection = () => {
         {user.name}
       </Link>
       {/* Subscribe button for each user */}
-      <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-500 transition">
-        Subscribe
-      </button>
+      <SubscribeButton 
+      userId={user.id}
+      isSubscribed={subscribeUsers.includes(user.id)}
+      onSubscribe={}
+      onUnsubscribe={}
+      ></SubscribeButton>
     </div>
   ))}
 </div>
