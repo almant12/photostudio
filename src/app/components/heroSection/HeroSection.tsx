@@ -71,7 +71,7 @@ const HeroSection = () => {
         headers: {
           'Content-Type': 'application/json', // Ensure the request is sent as JSON
         },body:JSON.stringify({
-          receiverId: userId, 
+          receiverId: parseInt(userId), 
         }),
       })
       if(response.ok){
@@ -79,6 +79,18 @@ const HeroSection = () => {
       }
     }catch(error){
       console.log(error)
+    }
+  }
+
+  const handleUnsubscribe = async(userId:string)=>{
+    try{
+      const response = await fetch('/api/un-subscribe/'+userId);
+      if(response.ok){
+       // Remove user from the subscribed list
+        setSubscribeUser((prev)=>prev.filter((id)=>id !== parseInt(userId))) 
+      }
+    } catch (error) {
+      console.error("Error unsubscribing:", error);
     }
   }
 
@@ -131,7 +143,8 @@ const HeroSection = () => {
       userId={user.id}
       isSubscribed={subscribeUsers.includes(user.id)}
       onSubscribe={handleSubscribe}
-      onUnsubscribe={}
+      onUnsubscribe={handleUnsubscribe}
+      isAuthenticate={userAuth?.valid}
       ></SubscribeButton>
     </div>
   ))}
