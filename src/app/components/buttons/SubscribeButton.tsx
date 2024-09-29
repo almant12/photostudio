@@ -6,6 +6,7 @@ interface SubscribeButtonProps {
     isSubscribed: boolean;
     onSubscribe: (userId: string) => void; // Function to call when subscribing
     onUnsubscribe: (userId: string) => void; // Function to call when unsubscribing
+    isAuthenticate:boolean
   }
 const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed, onSubscribe, onUnsubscribe }) => {
 

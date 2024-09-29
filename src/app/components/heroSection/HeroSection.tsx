@@ -14,36 +14,6 @@ const HeroSection = () => {
   const [userAuth, setUserAuth] = useState<{ valid: boolean; user: any } | null>(null);
   const [subscribeUsers,setSubscribeUser] = useState([]);
 
-  useEffect(() => {
-    // Check if user is authenticated
-    if (userAuth?.valid) {
-      const fetchSubscribeUsers = async () => {
-        try {
-          const response = await fetch('/api/subscribe', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-          });
-
-          if (!response.ok) {
-            throw new Error("Failed to fetch subscribed users");
-          }
-
-          const data = await response.json();
-          setSubscribeUser(data.users); // Update state with fetched users
-        } catch (error) {
-          console.error("Error fetching subscriptions:", error);
-        }
-      };
-
-      fetchSubscribeUsers(); // Fetch subscribed users only if authenticated
-    }
-  }, [userAuth]); // The effect will run whenever userAuth changes
-
-
-  useEffect(() => {
-    console.log('Updated subscribeUsers:', subscribeUsers); // Log state after update
-  }, [subscribeUsers]);
-
   const fetchUsers = async () => {
     try {
       const response = await fetch('/api/user', {
@@ -63,19 +33,30 @@ const HeroSection = () => {
     }
   };
 
-  // fetch authUser
   useEffect(() => {
     const authenticateUser = async () => {
-        const authResult = await authUser();
-        setUserAuth(authResult);
+      const authResult = await authUser();
+      setUserAuth(authResult);
+
+      if (authResult?.valid) {
+        try {
+          const response = await fetch('/api/subscribe', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch subscribed users");
+          }
+          const data = await response.json();
+          setSubscribeUser(data.users); // Update state with fetched subscribed users
+        } catch (error) {
+          console.error("Error fetching subscriptions:", error);
+        }
+      }
     };
     authenticateUser();
-}, []);
-
-  // fetch all admin & photograph users
-  useEffect(()=>{
     fetchUsers();
-  },[])
+  }, []);
 
   useEffect(() => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
@@ -84,7 +65,6 @@ const HeroSection = () => {
   return (
     <div className="bg-cover bg-center text-center backdrop-opacity-10 backdrop-invert bg-white/30 opacity-80 linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)" 
   style={{ backgroundImage: `url(${Background.src})` }}>
-
   {/* Change h-screen to min-h-[80vh] or remove it */}
   <div className="flex justify-start items-center min-h-[80vh] left-10">
     <div className="text-center ml-10">
