@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'; 
 import Link from 'next/link';
 import { authUser } from 'lib/authUser';
-import { Role } from '@prisma/client';
+import { useRouter } from "next/navigation";
 import NotificationButton from '@components/buttons/NotificationButton';
 
 
@@ -13,10 +13,8 @@ const NavBar = () => {
   const [showNav, setShowNav] = useState(true);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const [userAuth,setUserAuth] = useState(null);
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
-  const [isPhotographLoggedIn,setIsPhotographLoggedIn] = useState(false);
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
+  const route = useRouter();
 
   // Funksioni për të kontrolluar scroll-in
   const handleScroll = () => {
@@ -53,23 +51,25 @@ const NavBar = () => {
     }
   };
 
+  const logout = async()=>{
+    const response = await fetch('/api/logout',{
+      method:'POST'
+    });
+    if(response.ok){
+      route.push('/login')
+    }
+  }
+
   // Check the role of the authenticated user
   const checkUser = async () => {
     const user = (await authUser()).user;
     if (user) {
       setUserAuth(user); // Store userAuth in state
-      if (user.role === Role.ADMIN) {
-        setIsAdminLoggedIn(true);
-      } else if (user.role === Role.PHOTOGRAPH) {
-        setIsPhotographLoggedIn(true);
-      } else if (user.role === Role.USER) {
-        setIsUserLoggedIn(true);
-      }
     }
   };
 
   useEffect(()=>{
-    checkUser();
+  checkUser();
   fetchNotification()
   },[])
 
@@ -118,26 +118,23 @@ const NavBar = () => {
         </div>
 
         <div className="flex gap-5 mr-10">
-  {/* Admin is logged in */}
-  {isAdminLoggedIn && (
+          
+  {/* User is logged in */}
+  {userAuth ? (
+    <>
     <Link
       href="/admin/dashboard"
       className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
     >
       Dashboard
     </Link>
-  )}
-
-  {/* User is logged in */}
-  {userAuth ? (
-    <>
       <NotificationButton notifications={notifications} />
-      <Link
-        href="/logout" // Assuming you have a logout route
+      <button
+        onClick={logout}
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
       >
         Logout
-      </Link>
+      </button>
     </>
   ) : (
     // No user is logged in (show Sign In and Login links)

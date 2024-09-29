@@ -40,7 +40,7 @@ const LoginForm = () => {
                 }else if(decodedToken.role === 'PHOTOGRAPH'){
                     router.push('/photograph/dashboard')
                 } else if (decodedToken.role === 'USER') {
-                    router.push('/home'); // Redirect user to user home page
+                    router.push('/'); // Redirect user to user home page
                 } else {
                     router.push('/'); // Fallback to a default route if no role found
                 }
