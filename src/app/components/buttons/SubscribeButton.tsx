@@ -19,7 +19,7 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
             router.push('/login')
             return;
         }
-        
+
         if(subscribed){
             onUnsubscribe(userId)
         }else{
@@ -36,7 +36,7 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
         rounded-lg
         shadow-md 
         transition 
-        ${subscribed ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white`}
+        ${subscribed ? 'bg-red-500 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white`}
         >
             {subscribed ? 'Unsubscribed' : 'Subscribed'}
         </button>

@@ -1,6 +1,7 @@
 
 import { PrismaClient } from "@prisma/client";
 import { authUser } from "lib/authUser";
+import { NextResponse } from "next/server";
 
 
 
