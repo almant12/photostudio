@@ -130,7 +130,7 @@ const HeroSection = () => {
       <SubscribeButton 
       userId={user.id}
       isSubscribed={subscribeUsers.includes(user.id)}
-      onSubscribe={}
+      onSubscribe={handleSubscribe}
       onUnsubscribe={}
       ></SubscribeButton>
     </div>
