@@ -117,17 +117,31 @@ const NavBar = () => {
           </Link>
         </div>
 
-        <div className='flex gap-5 mr-10'>
-      {isAdminLoggedIn && (
-        <Link
-          href="/admin/dashboard"
-          className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
-        >
-          Dashboard
-        </Link>
-      )}
-      <NotificationButton notifications={notifications}>
-      </NotificationButton>
+        <div className="flex gap-5 mr-10">
+  {/* Admin is logged in */}
+  {isAdminLoggedIn && (
+    <Link
+      href="/admin/dashboard"
+      className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
+    >
+      Dashboard
+    </Link>
+  )}
+
+  {/* User is logged in */}
+  {userAuth ? (
+    <>
+      <NotificationButton notifications={notifications} />
+      <Link
+        href="/logout" // Assuming you have a logout route
+        className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
+      >
+        Logout
+      </Link>
+    </>
+  ) : (
+    // No user is logged in (show Sign In and Login links)
+    <>
       <Link
         href="/signUp"
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
@@ -140,7 +154,10 @@ const NavBar = () => {
       >
         Login
       </Link>
-    </div>
+    </>
+  )}
+</div>
+
       </nav>
     </header>
   );
