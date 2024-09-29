@@ -83,7 +83,9 @@ const HeroSection = () => {
 
   const handleUnsubscribe = async(userId:string)=>{
     try{
-      const response = await fetch('/api/un-subscribe/'+userId);
+      const response = await fetch('/api/un-subscribe/'+userId,{
+        method:'DELETE'
+      });
       if(response.ok){
        // Remove user from the subscribed list
         setSubscribeUser((prev)=>prev.filter((id)=>id !== parseInt(userId))) 
