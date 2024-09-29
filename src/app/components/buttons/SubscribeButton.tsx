@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 interface SubscribeButtonProps {
@@ -8,11 +9,17 @@ interface SubscribeButtonProps {
     onUnsubscribe: (userId: string) => void; // Function to call when unsubscribing
     isAuthenticate:boolean
   }
-const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed, onSubscribe, onUnsubscribe }) => {
+const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed, onSubscribe, onUnsubscribe,isAuthenticate }) => {
+    const router = useRouter();
 
     const [subscribed,setSubscribed] = useState(isSubscribed);
 
     const handleClick = () =>{
+        if(!isAuthenticate){
+            router.push('/login')
+            return;
+        }
+        
         if(subscribed){
             onUnsubscribe(userId)
         }else{
