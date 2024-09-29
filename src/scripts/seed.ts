@@ -25,11 +25,32 @@ async function seed(){
         },
         {
           id:4,
+          name:"photo2",
+          email:"photo2@gmail.com",
+          role:"PHOTOGRAPH",
+          password:bcrypt.hashSync('12345678',8)
+        },
+        {
+          id:5,
+          name:"photo3",
+          email:"photo3@gmail.com",
+          role:"PHOTOGRAPH",
+          password:bcrypt.hashSync('12345678',8)
+        },
+        {
+          id:6,
+          name:"photo4",
+          email:"photo4@gmail.com",
+          role:"PHOTOGRAPH",
+          password:bcrypt.hashSync('12345678',8)
+        },
+        {
+          id:7,
           name:"User",
           email:"user1@gmail.com",
           role:"USER",
           password:bcrypt.hashSync('12345678',8)
-      }
+        }
     ],skipDuplicates:true
 })}
 

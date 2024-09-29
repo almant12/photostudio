@@ -2,7 +2,6 @@ import { NextResponse,NextRequest } from "next/server";
 import { PrismaClient } from '@prisma/client';
 import { saveImage,deleteImage } from 'image-handler-almant'
 import { authUser } from "lib/authUser";
-import Pusher from "pusher";
 import pusher from "lib/pusher";
 
 const prisma = new PrismaClient();

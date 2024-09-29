@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { authUser } from 'lib/authUser';
 import { Role } from '@prisma/client';
+import Pusher from 'pusher-js'
+
 
 const NavBar = () => {
   const [isOpen,setIsOpen] = useState(false)
@@ -13,6 +15,23 @@ const NavBar = () => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [isPhotographLoggedIn,setIsPhotographLoggedIn] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+
+  useEffect(()=>{
+    const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY, {
+      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    });
+    const channel = pusher.subscribe('user-4');
+    channel.bind('new-post',(data)=>{
+      console.log(data)
+    })
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  },[])
+  
 
   // Funksioni për të kontrolluar scroll-in
   const handleScroll = () => {
@@ -51,7 +70,7 @@ const NavBar = () => {
 
   //check the role of the user
   const checkUser = async()=>{
-    const userAuth = (await authUser()).user;
+    const userAuth =  (await authUser()).user;
     if(userAuth?.role === Role.ADMIN){
       setIsAdminLoggedIn(true)
     }else if(userAuth?.role === Role.PHOTOGRAPH){

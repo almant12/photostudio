@@ -38,7 +38,7 @@
     "src/app/pages/api/upload.jsx",
     "src/app/components/animations/animations.js",
     "src/app/components/heroSection/HeroSection.jsx"
-, "src/app/components/album/Grid.js", "src/app/uploadImages/posts.tsx"  ],
+, "src/app/components/album/Grid.js", "src/app/uploadImages/posts.tsx", "server.js"  ],
   "exclude": [
     "node_modules"
   ]

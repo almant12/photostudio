@@ -6,10 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import Background from '../image/background1.jpg';
 import { scrollAnimation } from "../heroSection/scrollAnimation"; // Importo animacionin
+import { authUser } from "lib/authUser";
 
 const HeroSection = () => {
 
   const [users,setUser] = useState([]);
+  const [userAuth, setUserAuth] = useState<{ valid: boolean; user: any } | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -19,7 +21,6 @@ const HeroSection = () => {
           'Content-Type': 'application/json',
         },
       });
-  
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -30,10 +31,20 @@ const HeroSection = () => {
       console.error('Error fetching users:', error);
     }
   };
+  useEffect(() => {
+    // Define an async function to call authUser
+    const authenticateUser = async () => {
+        const authResult = await authUser();
+        setUserAuth(authResult);
+    };
+    authenticateUser();
+}, []);
 
+  useEffect(()=>{
+    fetchUsers();
+  },[])
   useEffect(() => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
-    fetchUsers()
   }, []);
 
   return (
@@ -69,19 +80,26 @@ const HeroSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {users.map((user) => (
-          <div key={user.id} className="flex flex-col items-center content-to-animate">
-            <Image 
-              src={user.avatar ? user.avatar : '/defaultUser.jpeg'} 
-              alt={`Photo of ${user.name}`} 
-              width={300} 
-              height={200} 
-              className="rounded-lg shadow-lg mb-4" 
-            />
-             <Link href={`/gallery/${user.id}`} className="text-center text-lg text-black font-semibold">{user.name}</Link>
-          </div>
-        ))}
-      </div>
+  {users.map((user) => (
+    <div key={user.id} className="flex flex-col items-center content-to-animate">
+      <Image 
+        src={user.avatar ? user.avatar : '/defaultUser.jpeg'} 
+        alt={`Photo of ${user.name}`} 
+        width={300} 
+        height={200} 
+        className="rounded-lg shadow-lg mb-4" 
+      />
+      <Link href={`/gallery/${user.id}`} className="text-center text-lg text-black font-semibold">
+        {user.name}
+      </Link>
+      {/* Subscribe button for each user */}
+      <button className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-500 transition">
+        Subscribe
+      </button>
+    </div>
+  ))}
+</div>
+
     </div>
   </section>
 </div>
