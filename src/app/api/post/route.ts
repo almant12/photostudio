@@ -96,16 +96,16 @@ export async function POST(req:NextRequest) {
           status: 'NEW_POST',
           senderId: parseInt(authenticatedUser.id),
           postId: post.id,
-          receiverId: subscription.senderId
+          receiverId: subscription.senderId,
         }
       });
 
       // Trigger Pusher event for real-time notification
       await pusher.trigger(`user-${subscription.senderId}`, 'new-post', {
-        postId: post.id,
-        title: post.title,
-        description: post.description,
-        image: post.image,
+        id: notification.id,
+        postId: notification.postId,
+        postTitle:post.title,
+        userName:authenticatedUser.name
       });
 
       return notification;
