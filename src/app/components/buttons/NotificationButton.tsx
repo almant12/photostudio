@@ -32,12 +32,12 @@ const transformToNotification = (data: any): Notification => {
     };
 };
 
-const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications ,userId }) => {
+const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications , userId}) => {
 
     const mappedNotifications: Notification[] = notifications.map(notification => ({
         id: notification.id,
         status: notification.status as 'NEW_POST' | 'SUBSCRIBE', // casting for simplicity
-        postId: notification.postId.toString(),
+        postId: notification.postId,
         postTitle:notification.postTitle,
         userName: notification.sender.name
     }));
@@ -63,6 +63,10 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
             const notification = transformToNotification(data)
           setNotificationList((prev) => [notification, ...prev]); // Add new notification to the list
         });
+
+        channel.bind('subscribe',(data:any)=>{
+            console.log(data)
+        })
       
         return () => {
           channel.unbind_all();
