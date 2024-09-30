@@ -89,18 +89,18 @@ const NavBar = () => {
       <nav className="flex justify-between items-center">
         <div className="flex gap-10 mx-auto">
           <Link
-            href="/home"
+            href="/"
             className="uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl hover:bg-green-600 transition duration-500 ease-in-out"
           >
             Home
           </Link>
 
-          <Link
+          <a
             href="/album"
             className="uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl hover:bg-green-600 transition duration-500 ease-in-out"
           >
             Albums
-          </Link>
+          </a>
 
           <Link
             href="/gallery"
@@ -128,7 +128,9 @@ const NavBar = () => {
     >
       Dashboard
     </Link>
-      <NotificationButton notifications={notifications} />
+      <NotificationButton notifications={notifications}
+      userId={userAuth.id} 
+      />
       <button
         onClick={logout}
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
@@ -139,18 +141,18 @@ const NavBar = () => {
   ) : (
     // No user is logged in (show Sign In and Login links)
     <>
-      <Link
+      <a
         href="/signUp"
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
       >
         Sign In
-      </Link>
-      <Link
+      </a>
+      <a
         href="/login"
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
       >
         Login
-      </Link>
+      </a>
     </>
   )}
 </div>

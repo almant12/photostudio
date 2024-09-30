@@ -1,6 +1,5 @@
 // components/Background.tsx
 import React from 'react';
-import Link from 'next/link';
 import BackgroundImage from '../album/album.jpg';
 
 const Background: React.FC = () => {

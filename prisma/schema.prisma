@@ -61,11 +61,11 @@ model Notification {
   status     Status  
   senderId   Int       
   receiverId Int 
-  postId     Int    
+  postId     Int?    
   createdAt  DateTime @default(now())   
 
   sender     User     @relation("SentNotifications", fields: [senderId], references: [id])
   receiver   User     @relation("ReceivedNotifications", fields: [receiverId], references: [id])
-  post       Post     @relation(fields: [postId], references: [id]) 
+  post       Post?     @relation(fields: [postId], references: [id]) 
 }
 

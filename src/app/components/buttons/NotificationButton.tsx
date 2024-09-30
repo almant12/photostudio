@@ -18,6 +18,7 @@ interface NotificationDropdownProps {
         postTitle:string
         sender: { name: string };
     }[];
+    userId:number
 }
 
 // Function to transform incoming data to match Notification interface
@@ -31,7 +32,7 @@ const transformToNotification = (data: any): Notification => {
     };
 };
 
-const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications }) => {
+const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications ,userId }) => {
 
     const mappedNotifications: Notification[] = notifications.map(notification => ({
         id: notification.id,
@@ -55,7 +56,7 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
       
         console.log("Pusher initialized:", pusher); // Log the Pusher instance
       
-        const channel = pusher.subscribe('user-7');
+        const channel = pusher.subscribe('user-'+userId);
       
         // Listen for the 'new-post' event
         channel.bind('new-post', (data: any) => {

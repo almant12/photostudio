@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Status } from "@prisma/client";
 import { authUser } from "lib/authUser";
 import { NextRequest, NextResponse } from "next/server";
+import pusher from "lib/pusher";
 
 const prisma = new PrismaClient();
 export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
@@ -53,7 +54,7 @@ export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
     if(subscription){
       return NextResponse.json({ message: 'Request has been made before' }, { status: 409 });
     }
-  
+
     //save the new subscription
     const newSubscription = await prisma.subscription.create({
       data:{
@@ -61,6 +62,20 @@ export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
         receiverId:parseInt(receiverId)
       }
     })
+
+    const notification = await prisma.notification.create({
+      data:{
+        status:Status.SUBSCRIBE,
+        senderId:parseInt(authenticatedUser.id),
+        receiverId:receiverId,
+        postId:null
+      }
+    })
+     // Trigger Pusher event for real-time notification
+     await pusher.trigger(`user-${newSubscription.receiverId}`, 'subscribe', {
+      id: notification.id,
+      userName:authenticatedUser.name
+    });
   
     return NextResponse.json({ message: 'Subscription created successfully', newSubscription });
   
