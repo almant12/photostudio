@@ -13,8 +13,6 @@ import UserCard from "@components/card/UserCard";
 const HeroSection = () => {
 
   const [users,setUser] = useState([]);
-  const [userAuth, setUserAuth] = useState<{ valid: boolean; user: any } | null>(null);
-  const [subscribeUsers, setSubscribeUser] = useState<number[]>([]);
 
   const fetchUsers = async () => {
     try {
@@ -36,65 +34,13 @@ const HeroSection = () => {
   };
 
   useEffect(() => {
-    const authenticateUser = async () => {
-      const authResult = await authUser();
-      setUserAuth(authResult);
-
-      if (authResult?.valid) {
-        try {
-          const response = await fetch('/api/subscribe', {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-          });
-          if (!response.ok) {
-            throw new Error("Failed to fetch subscribed users");
-          }
-          const data = await response.json();
-          const subscribedUserIds = data.users.map((user:any)=>user.id)
-          setSubscribeUser(subscribedUserIds); // Update state with fetched subscribed users
-        } catch (error) {
-          console.error("Error fetching subscriptions:", error);
-        }
-      }
-    };
     fetchUsers();
-    authenticateUser();
   }, []);
 
   useEffect(() => {
     scrollAnimation(); // Thirr funksionin e animacionit kur komponenti montohet
   }, []);
 
-
-  const handleSubscribe = async(userId:string)=>{
-    try{
-      const response = await fetch('api/subscribe/'+userId,{
-        method:'POST',
-        headers: {
-          'Content-Type': 'application/json', // Ensure the request is sent as JSON
-        }
-      })
-      if(response.ok){
-        setSubscribeUser((prev)=>[...prev,parseInt(userId)])
-      }
-    }catch(error){
-      console.log(error)
-    }
-  }
-
-  const handleUnsubscribe = async(userId:string)=>{
-    try{
-      const response = await fetch('/api/un-subscribe/'+userId,{
-        method:'DELETE'
-      });
-      if(response.ok){
-       // Remove user from the subscribed list
-        setSubscribeUser((prev)=>prev.filter((id)=>id !== parseInt(userId)))
-      }
-    } catch (error) {
-      console.error("Error unsubscribing:", error);
-    }
-  }
 
   return (
     <div className="bg-cover bg-center text-center backdrop-opacity-10 backdrop-invert bg-white/30 opacity-80 linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)" 
@@ -134,10 +80,6 @@ const HeroSection = () => {
     id={user.id}
     name={user.name}
     avatar={user.avatar}
-    subscribeUsers={subscribeUsers}
-    handleSubscribe={handleSubscribe}
-    handleUnsubscribe={handleUnsubscribe}
-    userAuth={userAuth}
     ></UserCard>
   ))}
 </div>
