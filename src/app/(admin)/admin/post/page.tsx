@@ -48,7 +48,7 @@ export default function PostIndex() {
   return (
     <div className="container mx-auto p-4">
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-gray-800 text-white border border-gray-200 rounded-md shadow-md">
+        <table className="min-w-full bg-gray-800 text-white border border-gray-200 rounded-3xl shadow-md">
           <thead>
             <tr className="border-b border-gray-300">
               <th className="py-4 px-4 text-left font-semibold">Id</th>

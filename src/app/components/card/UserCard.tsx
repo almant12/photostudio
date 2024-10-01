@@ -83,9 +83,9 @@ const UserCard: React.FC<UserCardProps> = ({
         height={200}
         className="rounded-lg shadow-lg mb-4"
       />
-      <Link href={`/gallery/${id}`} className="text-center text-lg text-black font-semibold">
+      <a href={`/gallery/${id}`} className="text-center text-lg text-black font-semibold">
         {name}
-      </Link>
+      </a>
       {/* Subscribe button for each user */}
       <SubscribeButton
         userId={id} // Use the id from props

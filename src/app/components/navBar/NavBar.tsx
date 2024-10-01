@@ -56,7 +56,7 @@ const NavBar = () => {
       method:'POST'
     });
     if(response.ok){
-      route.push('/login')
+      window.location.href = '/login';
     }
   }
 
@@ -131,12 +131,12 @@ const NavBar = () => {
       <NotificationButton notifications={notifications}
       userId={userAuth.id} 
       />
-      <button
+      <b
         onClick={logout}
         className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out"
       >
         Logout
-      </button>
+      </b>
     </>
   ) : (
     // No user is logged in (show Sign In and Login links)
