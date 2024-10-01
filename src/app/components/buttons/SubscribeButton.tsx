@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 
@@ -12,8 +12,13 @@ interface SubscribeButtonProps {
 const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed, onSubscribe, onUnsubscribe,isAuthenticate }) => {
     const router = useRouter();
 
-    console.log(isSubscribed)
     const [subscribed,setSubscribed] = useState(isSubscribed);
+
+
+    useEffect(() => {
+        // Synchronize the state with the isSubscribed prop when it changes
+        setSubscribed(isSubscribed);
+    }, [isSubscribed]);
 
     const handleClick = () =>{
         if(!isAuthenticate){
@@ -39,7 +44,7 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
         transition 
         ${subscribed ? 'bg-red-500 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white`}
         >
-            {subscribed ? 'Unsubscribed' : 'Subscribed'}
+            {subscribed ? 'Unsubscribed' : 'Subscribe'}
         </button>
     )
 
