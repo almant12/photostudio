@@ -69,8 +69,8 @@ const NavBar = () => {
   };
 
   useEffect(()=>{
+    fetchNotification()
   checkUser();
-  fetchNotification()
   },[])
 
   useEffect(() => {

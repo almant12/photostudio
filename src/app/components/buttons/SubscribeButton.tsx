@@ -12,6 +12,7 @@ interface SubscribeButtonProps {
 const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed, onSubscribe, onUnsubscribe,isAuthenticate }) => {
     const router = useRouter();
 
+    console.log(isSubscribed)
     const [subscribed,setSubscribed] = useState(isSubscribed);
 
     const handleClick = () =>{

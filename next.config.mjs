@@ -1,19 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // Lejo domenet që mund të ngarkojnë imazhe
-    images: {
-      domains: ['localhost'], //Add domain
-      domains: ['flowbite.s3.amazonaws.com'],
-      domains: ['madebydesignesia.com', 'flowbite.s3.amazonaws.com'],
-    },
-    
+  reactStrictMode: false, // Disable React Strict Mode in development
 
-    api: {
-      bodyParser: false,
-    },
-  
-   
-  };
-  
-  export default nextConfig;
-  
+  // Specify the domains that can load images
+  images: {
+    domains: ['localhost', 'flowbite.s3.amazonaws.com', 'madebydesignesia.com'], // Combine all domains in one array
+  },
+
+  api: {
+    bodyParser: false, // Disable bodyParser for API routes
+  },
+};
+
+// Use ES module export syntax
+export default nextConfig;

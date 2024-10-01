@@ -8,6 +8,7 @@ import Background from '../image/background1.jpg';
 import { scrollAnimation } from "../heroSection/scrollAnimation"; // Importo animacionin
 import { authUser } from "lib/authUser";
 import SubscribeButton from "@components/buttons/SubscribeButton";
+import UserCard from "@components/card/UserCard";
 
 const HeroSection = () => {
 
@@ -56,8 +57,8 @@ const HeroSection = () => {
         }
       }
     };
-    authenticateUser();
     fetchUsers();
+    authenticateUser();
   }, []);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const HeroSection = () => {
       });
       if(response.ok){
        // Remove user from the subscribed list
-        setSubscribeUser((prev)=>prev.filter((id)=>id !== parseInt(userId))) 
+        setSubscribeUser((prev)=>prev.filter((id)=>id !== parseInt(userId)))
       }
     } catch (error) {
       console.error("Error unsubscribing:", error);
@@ -128,26 +129,16 @@ const HeroSection = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
   {users.map((user) => (
-    <div key={user.id} className="flex flex-col items-center content-to-animate">
-      <Image 
-        src={user.avatar ? user.avatar : '/defaultUser.jpeg'} 
-        alt={`Photo of ${user.name}`} 
-        width={300} 
-        height={200} 
-        className="rounded-lg shadow-lg mb-4" 
-      />
-      <Link href={`/gallery/${user.id}`} className="text-center text-lg text-black font-semibold">
-        {user.name}
-      </Link>
-      {/* Subscribe button for each user */}
-      <SubscribeButton 
-      userId={user.id}
-      isSubscribed={subscribeUsers.includes(user.id)}
-      onSubscribe={handleSubscribe}
-      onUnsubscribe={handleUnsubscribe}
-      isAuthenticate={userAuth?.valid}
-      ></SubscribeButton>
-    </div>
+    <UserCard
+    key={user.id}
+    id={user.id}
+    name={user.name}
+    avatar={user.avatar}
+    subscribeUsers={subscribeUsers}
+    handleSubscribe={handleSubscribe}
+    handleUnsubscribe={handleUnsubscribe}
+    userAuth={userAuth}
+    ></UserCard>
   ))}
 </div>
 
