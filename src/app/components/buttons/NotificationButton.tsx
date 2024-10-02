@@ -53,6 +53,7 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
         const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
           cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
         });
+        console.log(notificationList)
       
         console.log("Pusher initialized:", pusher); // Log the Pusher instance
       

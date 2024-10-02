@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { authUser } from 'lib/authUser';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
 export async function GET(){
@@ -20,12 +20,25 @@ export async function GET(){
             sender:true,
         }
     })
-    
-    // Update the seen attribute to true for all fetched notifications
-    await prisma.notification.updateMany({
-        where: { receiverId: parseInt(authenticatedUser.id), seen: false }, // Only update unseen notifications
-        data: { senn: true },
-    });
-    
+
     return NextResponse.json(notification)
+}
+
+
+export async function UPDATE(req:NextRequest){
+
+    const {valid,user} = await authUser();
+
+    if(!valid || !user){
+        return NextResponse.json({'message':'Unauthorizate'},{status:401})
+    }
+    const authenticatedUser = user;
+    try{
+        await prisma.notification.updateMany({
+            where: { receiverId: parseInt(authenticatedUser.id), seen: false }, // Only update unseen notifications
+            data: { seen: true },
+        });
+    }catch(error){
+        return NextResponse.json({ 'message': error.message}, { status: 500 });
+    }
 }
