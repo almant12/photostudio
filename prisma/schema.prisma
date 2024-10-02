@@ -61,6 +61,7 @@ model Notification {
   status     Status  
   senderId   Int       
   receiverId Int 
+  senn Boolean @default(false)
   postId     Int?    
   createdAt  DateTime @default(now())   
 
