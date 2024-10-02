@@ -52,7 +52,22 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
+
+        if(seenNotifications > 0){
+            unSeenNotifications()
+        }
     };
+
+    const unSeenNotifications = async ()=>{
+        const response = await fetch('/api/notification',{
+            method:'PUT'
+        });
+        if (response.ok){
+            setSeenNotification(0)
+        }else{
+            console.log(response)
+        }
+    }
 
     useEffect(()=>{
         const getSeenNotifications = async()=>{
@@ -60,7 +75,8 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
             setSeenNotification(seen.length)
         }
         getSeenNotifications()
-    })
+        unSeenNotifications
+    },[])
 
     useEffect(() => {
         const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
