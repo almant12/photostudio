@@ -8,6 +8,7 @@ interface Notification {
     postId?: string; // used only for status;
     postTitle?: string; // used only for post;
     userName: string;
+    seen:boolean;
 }
 
 interface NotificationDropdownProps {
@@ -15,7 +16,8 @@ interface NotificationDropdownProps {
         id: number;
         status: string;
         postId: number;
-        postTitle:string
+        postTitle:string;
+        seen:boolean;
         sender: { name: string };
     }[];
     userId:number
@@ -28,6 +30,7 @@ const transformToNotification = (data: any): Notification => {
         status: 'NEW_POST', // Set the status appropriately; you can change this based on your requirements
         postId: data.postId.toString(), // Convert to string
         postTitle: data.postTitle,
+        seen:data.seen,
         userName: data.userName,
     };
 };
@@ -39,21 +42,30 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
         status: notification.status as 'NEW_POST' | 'SUBSCRIBE', // casting for simplicity
         postId: notification.postId,
         postTitle:notification.postTitle,
+        seen:notification.seen,
         userName: notification.sender.name
     }));
 
     const [isOpen, setIsOpen] = useState(false);
     const [notificationList, setNotificationList] = useState<Notification[]>(mappedNotifications);
+    const [seenNotifications,setSeenNotification] = useState<number>(0);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
 
+    useEffect(()=>{
+        const getSeenNotifications = async()=>{
+            const seen = await notificationList.filter((notification:Notification) => !notification.seen)
+            setSeenNotification(seen.length)
+        }
+        getSeenNotifications()
+    })
+
     useEffect(() => {
         const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_APP_KEY!, {
           cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
         });
-        console.log(notificationList)
       
         console.log("Pusher initialized:", pusher); // Log the Pusher instance
       
@@ -88,7 +100,7 @@ const NotificationButton: React.FC<NotificationDropdownProps> = ({ notifications
             >
                 Notification
                 <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white rounded-full text-xs px-2 py-1">
-                {notificationList.length}
+                {seenNotifications}
         </span>
             </button>
             {isOpen && (
