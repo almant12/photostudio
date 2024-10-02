@@ -1,44 +1,51 @@
 import { PrismaClient } from '@prisma/client';
-import { authUser } from 'lib/authUser';
+import { authUser } from 'lib/authUser'; // Ensure this path is correct
 import { NextRequest, NextResponse } from 'next/server';
 
 const prisma = new PrismaClient();
-export async function GET(){
 
-    const {valid,user} = await authUser();
+// GET request to fetch notifications
+export async function GET() {
+    const { valid, user } = await authUser();
 
-    //check if user is authenticate
-    if(!valid || !user){
-        return NextResponse.json({'message':'Unauthorizate'},{status:401})
+    // Check if the user is authenticated
+    if (!valid || !user) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     const authenticatedUser = user;
 
-    //fetch ur notification
-    const notification = await prisma.notification.findMany({
-        where:{receiverId:parseInt(authenticatedUser.id)},
-        include:{
-            sender:true,
+    // Fetch notifications for the authenticated user
+    const notifications = await prisma.notification.findMany({
+        where: { receiverId: parseInt(authenticatedUser.id) },
+        include: {
+            sender: true, // Include sender details
         }
-    })
+    });
 
-    return NextResponse.json(notification)
+    return NextResponse.json(notifications);
 }
 
+// UPDATE request to mark notifications as seen
+export async function PUT(req: NextRequest) {
+    const { valid, user } = await authUser();
 
-export async function UPDATE(req:NextRequest){
-
-    const {valid,user} = await authUser();
-
-    if(!valid || !user){
-        return NextResponse.json({'message':'Unauthorizate'},{status:401})
+    // Check if the user is authenticated
+    if (!valid || !user) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
     const authenticatedUser = user;
-    try{
-        await prisma.notification.updateMany({
-            where: { receiverId: parseInt(authenticatedUser.id), seen: false }, // Only update unseen notifications
+
+    try {
+        const updatedNotifications = await prisma.notification.updateMany({
+            where: { 
+                receiverId: parseInt(authenticatedUser.id), 
+                seen: false // Only update unseen notifications
+            },
             data: { seen: true },
         });
-    }catch(error){
-        return NextResponse.json({ 'message': error.message}, { status: 500 });
+
+        return NextResponse.json({ message: 'Notifications updated successfully.', updated: updatedNotifications.count }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }
