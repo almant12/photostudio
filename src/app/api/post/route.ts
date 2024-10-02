@@ -1,6 +1,6 @@
 import { NextResponse,NextRequest } from "next/server";
 import { PrismaClient } from '@prisma/client';
-import { saveImage,deleteImage } from 'image-handler-almant'
+import { saveImage,saveUrlImage,deleteImage } from "image-handler-almant";
 import { authUser } from "lib/authUser";
 import pusher from "lib/pusher";
 
@@ -44,6 +44,7 @@ export async function POST(req:NextRequest) {
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const image = formData.get('image') as File;
+    const imageUrl = formData.get('imageUrl') as string;
   
     // Validation errors collection
     const errors: { [key: string]: string } = {};
@@ -57,14 +58,16 @@ export async function POST(req:NextRequest) {
       errors.title = "Title must not exceed 255 characters.";
     }
   
-    // Validate image
-    if (!image) {
-      errors.image = "Image is required.";
-    } else if (!['image/jpeg', 'image/png', 'image/gif'].includes(image.type)) {
-      errors.image = "Invalid image type. Only JPEG, PNG, and GIF are allowed.";
-    } else if (image.size > 2 * 1024 * 1024) {  // Max 2MB file size
-      errors.image = "Image size must be less than 2MB.";
-    }
+    if (!image && !imageUrl) {
+      errors.image = "Image or Image URL is required.";
+  } else if (image) {
+      // Validate uploaded image
+      if (!['image/jpeg', 'image/png', 'image/gif'].includes(image.type)) {
+          errors.image = "Invalid image type. Only JPEG, PNG, and GIF are allowed.";
+      } else if (image.size > 2 * 1024 * 1024) {  // Max 2MB file size
+          errors.image = "Image size must be less than 2MB.";
+      }
+  }
   
     // If there are any validation errors, return them
     if (Object.keys(errors).length > 0) {
@@ -74,7 +77,14 @@ export async function POST(req:NextRequest) {
     let imagePath: string | null = null;
 
     try {
-      imagePath = await saveImage(image);
+      if (image) {
+        // Handle file upload
+        imagePath = await saveImage(image);
+    } else if (imageUrl) {
+        // Handle image from URL
+        imagePath = await saveUrlImage(imageUrl);
+    }
+
   
       const post = await prisma.post.create({
         data: {
