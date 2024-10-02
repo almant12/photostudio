@@ -20,6 +20,12 @@ export async function GET(){
             sender:true,
         }
     })
-
+    
+    // Update the seen attribute to true for all fetched notifications
+    await prisma.notification.updateMany({
+        where: { receiverId: parseInt(authenticatedUser.id), seen: false }, // Only update unseen notifications
+        data: { senn: true },
+    });
+    
     return NextResponse.json(notification)
 }
