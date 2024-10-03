@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Alert } from "@/components/ui/alert";
+// import { useAlert } from "components/alert/AlertContext";
 
 
 interface SubscribeButtonProps {
@@ -14,8 +14,6 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
     const router = useRouter();
 
     const [subscribed,setSubscribed] = useState(isSubscribed);
-    const [showAlert,setShowAlert] = useState(false);
-    const [alertMessage,setAlertMessage] = useState('');
 
 
     useEffect(() => {
@@ -31,25 +29,13 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
 
         if(subscribed){
             onUnsubscribe(userId)
-            setAlertMessage("You have unsubscribed.");
         }else{
             onSubscribe(userId)
-            setAlertMessage("Thank you for subscribing!");
         }
         setSubscribed(!subscribed)
-        setShowAlert(true);
     }
 
     return (
-        <div>
-          {showAlert && (
-            <Alert
-              className="mb-4"
-              // Add any custom styles or types you need for the alert
-            >
-              {alertMessage}
-            </Alert>
-          )}
           <button
             onClick={handleClick}
             className={`mt-4
@@ -62,7 +48,6 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
           >
             {subscribed ? "Unsubscribed" : "Subscribe"}
           </button>
-        </div>
       );
 
 }
