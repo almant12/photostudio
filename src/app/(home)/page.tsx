@@ -1,6 +1,6 @@
 "use state";
 import React from 'react';
-import HeroSection from '@components/heroSection/HeroSection';
+import HeroSection from 'components/heroSection/HeroSection';
 
 
 export default function Page() {
