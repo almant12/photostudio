@@ -18,9 +18,7 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "@components/*": [
-        "app/components/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "incremental": true,
     "plugins": [
