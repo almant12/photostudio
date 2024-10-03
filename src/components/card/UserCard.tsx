@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import SubscribeButton from '@components/buttons/SubscribeButton';
+import SubscribeButton from 'components/buttons/SubscribeButton';
 import { useState,useEffect } from 'react';
 import { authUser } from "lib/authUser";
 

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { authUser } from 'lib/authUser';
 import { useRouter } from "next/navigation";
-import NotificationButton from '@components/buttons/NotificationButton';
+import NotificationButton from 'components/buttons/NotificationButton';
 
 
 const NavBar = () => {

@@ -1,5 +1,6 @@
 import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Alert } from "@/components/ui/alert";
 
 
 interface SubscribeButtonProps {
@@ -13,6 +14,8 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
     const router = useRouter();
 
     const [subscribed,setSubscribed] = useState(isSubscribed);
+    const [showAlert,setShowAlert] = useState(false);
+    const [alertMessage,setAlertMessage] = useState('');
 
 
     useEffect(() => {
@@ -28,25 +31,39 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
 
         if(subscribed){
             onUnsubscribe(userId)
+            setAlertMessage("You have unsubscribed.");
         }else{
             onSubscribe(userId)
+            setAlertMessage("Thank you for subscribing!");
         }
         setSubscribed(!subscribed)
+        setShowAlert(true);
     }
 
-    return(
-        <button onClick={handleClick}
-        className={`mt-4
-        px-4
-        py-2
-        rounded-lg
-        shadow-md 
-        transition 
-        ${subscribed ? 'bg-red-500 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white`}
-        >
-            {subscribed ? 'Unsubscribed' : 'Subscribe'}
-        </button>
-    )
+    return (
+        <div>
+          {showAlert && (
+            <Alert
+              className="mb-4"
+              // Add any custom styles or types you need for the alert
+            >
+              {alertMessage}
+            </Alert>
+          )}
+          <button
+            onClick={handleClick}
+            className={`mt-4
+            px-4
+            py-2
+            rounded-lg
+            shadow-md 
+            transition 
+            ${subscribed ? 'bg-red-500 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500'} text-white`}
+          >
+            {subscribed ? "Unsubscribed" : "Subscribe"}
+          </button>
+        </div>
+      );
 
 }
 
