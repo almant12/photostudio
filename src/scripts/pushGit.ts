@@ -1,7 +1,8 @@
-const simpleGit = require('simple-git');
+import simpleGit from 'simple-git';
 
 // Create a Git instance
 const git = simpleGit();
+
 
 // Function to checkout a branch by its unique ID
 const pushGitById = async (id: string): Promise<void> => {

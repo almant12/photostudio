@@ -1,13 +1,13 @@
-
+'use server'
 import { jwtVerify } from 'jose';
-import { NextRequest} from 'next/server';
+import { cookies } from 'next/headers';
 import { JWTPayload } from 'type/type';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
 export async function authUser(): Promise<{ valid: boolean; user: JWTPayload | null }> {
-    const cookieStore = NextRequest;
-    const token = cookieStore.cookies('Authorization');
+    const cookieStore = cookies();
+    const token = cookieStore.get('Authorization');
 
     if (!token) {
         return { valid: false, user: null };
