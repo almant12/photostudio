@@ -1,32 +1,33 @@
-'use server'
+
 import { jwtVerify } from 'jose';
-import { cookies } from 'next/headers';
+import { NextRequest} from 'next/server';
+import { JWTPayload } from 'type/type';
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export async function authUser() {
-    // Get the cookies
-    const cookieStore = cookies();
-    const token = cookieStore.get('Authorization'); // Retrieve the token from cookies
+export async function authUser(): Promise<{ valid: boolean; user: JWTPayload | null }> {
+    const cookieStore = NextRequest;
+    const token = cookieStore.cookies('Authorization');
 
-    // If no token is found, return invalid
     if (!token) {
         return { valid: false, user: null };
-
     }
 
     try {
-        // Convert to Uint8Array
         const secretKey = new TextEncoder().encode(JWT_SECRET);
+        const { payload } = await jwtVerify(token.value, secretKey);
 
-        // Verify and decode the JWT
-        const { payload } = await jwtVerify(token.value, secretKey); // Use token.value
+        const payloadUser : JWTPayload = {
+            id:payload.id as string,
+            name:payload.name as string,
+            role:payload.role as string,
+            exp:payload.exp
+        }
 
-        // Return decoded payload
-        return { valid: true, user: payload };
+            return { valid: true, user: payloadUser }; // Safe assertion here
     } catch (error) {
-        cookieStore.delete('Authorization')
-        console.error('Error verifying JWT:', error);
+        cookieStore.delete('Authorization');
+        console.error('Error verifying JWT:', error instanceof Error ? error.message : error);
         return { valid: false, user: null };
     }
 }

@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 export async function GET(){
     
-  const authenticatedUser = (await authUser()).user;
+  const authenticatedUser: any = (await authUser()).user;
 
     const subscribe = await prisma.subscription.findMany({
         where:{senderId:parseInt(authenticatedUser.id)},

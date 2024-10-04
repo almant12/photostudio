@@ -5,16 +5,19 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 
-export async function DELETE(req:NextRequest,{params}:{params:{userId:string}}){
+export async function DELETE(req:NextRequest){
 
-    const id = parseInt(params.userId);
+    const url = req.nextUrl.pathname; // e.g., '/api/post/delete/1'
+      const parts = url.split('/'); // Split the path into parts
+      const idPath = parts[parts.length - 1]; // Get the last part, which is the postId
+    const id = parseInt(idPath);
 
     const {valid,user} = await authUser();
     if(!valid){
         return NextResponse.json({'message':'unauthorizate'},{status:401})
     }
 
-    const authenticatedUser = user;
+    const authenticatedUser:any = user;
 
     //find the subscribe
     try{
@@ -35,7 +38,7 @@ export async function DELETE(req:NextRequest,{params}:{params:{userId:string}}){
             }
         });
         return NextResponse.json({ message: 'Successfully unsubscribed' }, { status: 200 });
-    } catch (error) {
+    } catch (error:any) {
         console.error('Error unsubscribing:', error);
         return NextResponse.json({ message: 'Server error' }, { status: 500 });
     }

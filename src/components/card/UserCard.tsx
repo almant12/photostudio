@@ -88,11 +88,11 @@ const UserCard: React.FC<UserCardProps> = ({
       </a>
       {/* Subscribe button for each user */}
       <SubscribeButton
-        userId={id} // Use the id from props
+        userId={id.toString()} // Use the id from props
         isSubscribed={subscribeUsers.includes(id)} // Check if the user is subscribed
         onSubscribe={handleSubscribe}
         onUnsubscribe={handleUnsubscribe}
-        isAuthenticate={userAuth?.valid}
+        isAuthenticate={userAuth?.valid ?? false}
       />
     </div>
   );
