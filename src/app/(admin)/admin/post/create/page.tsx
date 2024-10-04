@@ -1,11 +1,11 @@
-'use client'
+'use client'; // Include this to specify that this component is a client component
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 
 export default function CreatePost() {
     const [image, setImage] = useState<File | null>(null); // Specify type for image
     const [title, setTitle] = useState<string>(''); // Specify type for title
-    const [errors, setError] = useState<string[]>([]); // Specify type for errors
+    const [errors, setError] = useState<{ image?: string; title?: string }>({}); // Use an object for errors
 
     const router = useRouter();
 
@@ -39,7 +39,7 @@ export default function CreatePost() {
                 router.push('/admin/post');
             } else {
                 const data = await res.json();
-                setError(data.errors);
+                setError(data.errors); // Assuming data.errors is an object with fields like { image: 'Error message', title: 'Error message' }
             }
         } catch (error) {
             console.error('Error submitting the form:', error);
@@ -61,7 +61,7 @@ export default function CreatePost() {
                         onChange={handleImageChange} // Handle image change
                         className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5"
                     />
-                    {errors.image && <p className="text-red-500">{errors.image}</p>}
+                    {errors.image && <p className="text-red-500">{errors.image}</p>} {/* Access image error correctly */}
                 </div>
                 <div className="mb-6">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -76,7 +76,7 @@ export default function CreatePost() {
                         className="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5"
                         placeholder="Title"
                     />
-                       {errors.title && <p className="text-red-500">{errors.title}</p>}
+                    {errors.title && <p className="text-red-500">{errors.title}</p>} {/* Access title error correctly */}
                 </div>
                 <button
                     type="submit"
