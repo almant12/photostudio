@@ -8,7 +8,7 @@
     "merge": "ts-node src/scripts/mergeGit.ts",
     "seed": "ts-node src/scripts/seed.ts",
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && prisma generate",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
