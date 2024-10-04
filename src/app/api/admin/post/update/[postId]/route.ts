@@ -74,7 +74,7 @@ export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
       });
   
       return NextResponse.json({ updatedPost }, { status: 201 });
-    } catch (error) {
+    } catch (error:any) {
       //once the post does not update delete the new upload image
       if (imagePath) {
         deleteImage(imagePath);

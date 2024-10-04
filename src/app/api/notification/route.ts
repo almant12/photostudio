@@ -12,7 +12,7 @@ export async function GET() {
     if (!valid || !user) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const authenticatedUser = user;
+    const authenticatedUser : any = user;
 
     // Fetch notifications for the authenticated user
     const notifications = await prisma.notification.findMany({
@@ -33,7 +33,7 @@ export async function PUT() {
     if (!valid || !user) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const authenticatedUser = user;
+    const authenticatedUser:any = user;
 
     try {
         const updatedNotifications = await prisma.notification.updateMany({
@@ -45,7 +45,7 @@ export async function PUT() {
         });
 
         return NextResponse.json({ message: 'Notifications updated successfully.', updated: updatedNotifications.count }, { status: 200 });
-    } catch (error) {
+    } catch (error:any) {
         return NextResponse.json({ message: error.message }, { status: 500 });
     }
 }

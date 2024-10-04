@@ -15,7 +15,7 @@ export async function PUT(req:NextRequest){
     if(!valid || !user){
         return NextResponse.json({'message':'Unauthorizate'},{status:401});
     }
-    const authenticateUser = user;
+    const authenticateUser:any = user;
 
     //check if user exist
     const userExist = await prisma.user.findUnique({
@@ -75,7 +75,7 @@ export async function PUT(req:NextRequest){
         });
 
         return NextResponse.json({updateUser},{status:200});
-    } catch (error) {
+    } catch (error:any) {
         //once the user does not update delete the new upload image
         if (avatarPath) {
           deleteImage(avatarPath);

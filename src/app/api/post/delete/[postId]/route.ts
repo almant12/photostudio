@@ -16,7 +16,7 @@ export async function DELETE(req:NextRequest){
         const {valid,user} = await authUser();
 
 
-        const authenticatedUser = user;
+        const authenticatedUser:any = user;
 
         const post = await prisma.post.findUnique({
           where: { id: id },

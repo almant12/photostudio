@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 
 export async function PUT(req: NextRequest) {
-  
+
       // Extract the postId from the URL path
       const url = req.nextUrl.pathname; // e.g., '/api/post/update/1'
       const parts = url.split('/'); // Split the path into parts
@@ -22,7 +22,7 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json({'message':'Unauthorizate'},{status:401})
     }
 
-    const authenticatedUser = user;
+    const authenticatedUser:any = user;
 
   
     //check if the post exist
@@ -87,7 +87,7 @@ export async function PUT(req: NextRequest) {
       });
   
       return NextResponse.json({ updatedPost }, { status: 201 });
-    } catch (error) {
+    } catch (error:any) {
       //once the post does not update delete the new upload image
       if (imagePath) {
         deleteImage(imagePath);

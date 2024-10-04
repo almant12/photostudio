@@ -39,7 +39,7 @@ export async function POST(req:NextRequest) {
       return NextResponse.json({'message':'Forbidden'},{status:403})
     }
 
-    const authenticatedUser = user;
+    const authenticatedUser:any = user;
     
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
@@ -90,7 +90,7 @@ export async function POST(req:NextRequest) {
         data: {
           title: title,
           description:description || null,
-          image: imagePath,
+          image: imagePath as string,
           authorId: parseInt(authenticatedUser.id)
         }
       });
@@ -124,7 +124,7 @@ export async function POST(req:NextRequest) {
       await Promise.all(notifications)
   
       return NextResponse.json({ post }, { status: 201 });
-    } catch (error) {
+    } catch (error:any) {
       // If imagePath is not null, delete the image
       if (imagePath) {
         deleteImage(imagePath);
