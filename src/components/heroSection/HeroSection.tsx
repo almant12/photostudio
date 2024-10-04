@@ -3,11 +3,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import Background from '../image/background1.jpg';
 import { scrollAnimation } from "../heroSection/scrollAnimation"; // Importo animacionin
-import { authUser } from "lib/authUser";
-import SubscribeButton from "components/buttons/SubscribeButton";
 import UserCard from "components/card/UserCard";
 
 const HeroSection = () => {

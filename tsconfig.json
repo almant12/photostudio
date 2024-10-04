@@ -21,6 +21,7 @@
       "@/*": ["./src/*"]
     },
     "incremental": true,
+    "types": ["jest", "node"],  // Add this line
     "plugins": [
       {
         "name": "next"
@@ -35,8 +36,12 @@
     "src/app/pages/api/UploadPhotoForm.jsx",
     "src/app/pages/api/upload.jsx",
     "src/app/components/animations/animations.js",
-    "src/app/components/heroSection/HeroSection.jsx"
-, "src/app/components/album/Grid.js", "src/app/uploadImages/posts.tsx", "server.js"  ],
+    "src/app/components/heroSection/HeroSection.jsx",
+    "src/app/components/album/Grid.js",
+    "src/app/uploadImages/posts.tsx",
+    "server.js",
+    "**/__tests__/**/*.*"  // Include your test files
+  ],
   "exclude": [
     "node_modules"
   ]

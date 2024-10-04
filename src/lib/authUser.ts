@@ -12,6 +12,7 @@ export async function authUser() {
     // If no token is found, return invalid
     if (!token) {
         return { valid: false, user: null };
+
     }
 
     try {
@@ -24,6 +25,7 @@ export async function authUser() {
         // Return decoded payload
         return { valid: true, user: payload };
     } catch (error) {
+        cookieStore.delete('Authorization')
         console.error('Error verifying JWT:', error);
         return { valid: false, user: null };
     }
