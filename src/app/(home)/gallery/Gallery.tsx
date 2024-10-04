@@ -1,4 +1,3 @@
-'use client'
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
@@ -7,14 +6,20 @@ import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Define the props type
+// Define the Post and GalleryProps types
+interface Post {
+  id: string;
+  title: string;
+  image: string;
+}
+
 interface GalleryProps {
-  userId: string; // Change this to the appropriate type if userId is not a string
+  userId: string;
 }
 
 const Gallery: React.FC<GalleryProps> = ({ userId }) => {
   const router = useRouter();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<Post[]>([]); // Define posts as an array of Post objects
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
@@ -131,15 +136,9 @@ const Gallery: React.FC<GalleryProps> = ({ userId }) => {
           <h2 className="text-center text-3xl font-bold">Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-20">
             {filteredPosts.map((post) => (
-              <div key={post.id}>
-                <Image
-                  className="h-auto max-w-full rounded-lg gallery-img"
-                  src={post.image}
-                  alt={post.title}
-                  width={500}
-                  height={300}
-                />
-                <h1 className="text-center">{post.title}</h1>
+              <div key={post.id} className="relative group gallery-img">
+                <Image src={post.image} alt={post.title} width={400} height={300} className="transition-all duration-300 transform group-hover:scale-105" />
+                <p className="text-center mt-2">{post.title}</p>
               </div>
             ))}
           </div>
