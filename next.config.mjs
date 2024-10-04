@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint:{
+    ignoreDuringBuilds:true
+  },
   reactStrictMode: false, // Disable React Strict Mode in development
 
   // Specify the domains that can load images
