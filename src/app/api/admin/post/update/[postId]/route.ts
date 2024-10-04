@@ -1,8 +1,7 @@
 import { NextResponse,NextRequest } from "next/server";
 import { PrismaClient } from '@prisma/client';
 import { authUser } from "lib/authUser";
-import { updateImage } from "lib/uploadImageService";
-import { deleteImage } from "lib/uploadImageService";
+import { updateImage,deleteImage  } from "image-handler-almant";
 
 const prisma = new PrismaClient();
 
