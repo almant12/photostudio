@@ -4,7 +4,6 @@ import validatePassword from "helpers/validatePassword";
 import { PrismaClient } from '@prisma/client';
 import bcrypt from "bcryptjs";
 import * as jose from "jose";
-import { use } from "react";
 import { cookies } from "next/headers";
 
 const prisma = new PrismaClient();

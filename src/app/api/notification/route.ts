@@ -26,7 +26,7 @@ export async function GET() {
 }
 
 // UPDATE request to mark notifications as seen
-export async function PUT(req: NextRequest) {
+export async function PUT() {
     const { valid, user } = await authUser();
 
     // Check if the user is authenticated

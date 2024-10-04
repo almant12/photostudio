@@ -6,10 +6,15 @@ import { updateImage,deleteImage  } from "image-handler-almant";
 const prisma = new PrismaClient();
 
 
-export async function PUT(req:NextRequest,{params}:{params:{postId:string}}) {
-    const formData = await req.formData();
-    const postId = parseInt(params.postId);
+export async function PUT(req: NextRequest) {
+  
+      // Extract the postId from the URL path
+      const url = req.nextUrl.pathname; // e.g., '/api/post/update/1'
+      const parts = url.split('/'); // Split the path into parts
+      const postId = parseInt(parts[parts.length - 1]); // Get the last part and parse it to an integer
 
+      // Get the form data
+      const formData = await req.formData();
     //pass the req into function for validate the header token and return user payload
     const {valid,user} = await authUser();
 

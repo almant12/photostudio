@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -104,7 +104,7 @@ const Gallery = ({ userId }) => {
               onChange={(e) => setSearch(e.target.value)}
               className="mb-4 block w-full text-black p-2 border border-gray-300 rounded-lg">
                 {posts.map(post=>(
-                   <option value={post.title}>{post.title}</option>
+                   <option key={post.id} value={post.title}>{post.title}</option>
                 ))}
             </select>
 

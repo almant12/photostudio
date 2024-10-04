@@ -5,10 +5,12 @@ import { authUser } from "lib/authUser";
 const prisma = new PrismaClient();
 
 
-export async function DELETE(req:NextRequest,{params}:{params:{postId:string}}){
+export async function DELETE(req:NextRequest){
     try {
-        const { postId } = params;
-        const id = parseInt(postId);
+      const url = req.nextUrl.pathname; // e.g., '/api/post/delete/1'
+      const parts = url.split('/'); // Split the path into parts
+      const postId = parts[parts.length - 1]; // Get the last part, which is the postId
+      const id = parseInt(postId); // Parse it as an integer
 
         //pass the req into function for validate the header token and return user payload
         const {valid,user} = await authUser();
