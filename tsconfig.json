@@ -42,7 +42,7 @@
     "src/app/uploadImages/posts.tsx",
     "server.js",
     "**/__tests__/**/*.*"  // Include your test files
-  ],
+, "src/app/(home)/gallery/[userId]/page.tsx"  ],
   "exclude": [
     "node_modules"
   ]
