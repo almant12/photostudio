@@ -4,9 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 import pusher from "lib/pusher";
 
 const prisma = new PrismaClient();
-export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
+export async function POST(req:NextRequest){
 
-    const receiverId = parseInt(params.userId);
+      const url = req.nextUrl.pathname; // e.g., '/api/post/delete/1'
+      const parts = url.split('/'); // Split the path into parts
+      const id = parts[parts.length - 1]; // Get the last part, which is the postId
+      const receiverId = parseInt(id);
   
       // Initialize an errors collection
     const errors: { [key: string]: string } = {};
@@ -30,11 +33,11 @@ export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
       return NextResponse.json({'message':'jwt not valid'},{status:500})
     }
   
-    const authenticatedUser = user;
+    const authenticatedUser:any = user;
   
     //check admin exist
     const userExist = await prisma.user.findUnique({
-      where:{id:parseInt(receiverId)}
+      where:{id:receiverId}
     });
   
     if(!userExist){
@@ -47,7 +50,7 @@ export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
     //check if request id maded before
     const subscription = await prisma.subscription.findFirst({
       where: {
-        senderId: parseInt(authenticatedUser.id), receiverId: parseInt(receiverId)
+        senderId: parseInt(authenticatedUser.id), receiverId: receiverId
       }
     });
   
@@ -59,7 +62,7 @@ export async function POST(req:NextRequest,{params}:{params:{userId:string}}){
     const newSubscription = await prisma.subscription.create({
       data:{
         senderId:parseInt(authenticatedUser.id),
-        receiverId:parseInt(receiverId)
+        receiverId:receiverId
       }
     })
 

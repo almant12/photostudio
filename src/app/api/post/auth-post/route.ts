@@ -4,17 +4,17 @@ import { authUser } from "lib/authUser";
 
 const prisma = new PrismaClient();
 
-export async function GET(req:NextRequest){
+export async function GET(){
 
   // Pass the req into function to validate the header token and return user payload
-const { valid, user } = await authUser(req);
+const { valid, user } = await authUser();
 
 if (!valid) {
     // Handle invalid token case, e.g., throw an error or return a response
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
 }
 
-const authenticatedUser = user;
+const authenticatedUser:any = user;
 
 try {
     // Find all posts by the authenticated user's ID
@@ -25,7 +25,7 @@ try {
     });
 
     return NextResponse.json(posts); // Return the posts as a response
-} catch (error) {
+} catch (error:any) {
     // Handle error
     return NextResponse.json({ message: 'Error fetching posts', error: error.message }, { status: 500 });
 }
