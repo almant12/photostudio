@@ -3,25 +3,30 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 
 export default function CreatePost() {
-    const [image, setImage] = useState(null);
-    const [title, setTitle] = useState('');
-    const [errors, setError] = useState([]);
+    const [image, setImage] = useState<File | null>(null); // Specify type for image
+    const [title, setTitle] = useState<string>(''); // Specify type for title
+    const [errors, setError] = useState<string[]>([]); // Specify type for errors
 
-    const router = useRouter()
+    const router = useRouter();
 
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]); // Get the selected file
+    // Specify the type for the event parameter
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setImage(e.target.files[0]); // Get the selected file
+        }
     };
 
-    const handleTitleChange = (e) => {
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent default form submission
 
         const formData = new FormData();
-        formData.append('image', image); // Add image file
+        if (image) {
+            formData.append('image', image); // Add image file
+        }
         formData.append('title', title); // Add title
 
         try {
@@ -31,10 +36,10 @@ export default function CreatePost() {
             });
 
             if (res.ok) {
-              router.push('/admin/post')
+                router.push('/admin/post');
             } else {
-              const data = await res.json();
-              setError(data.errors)
+                const data = await res.json();
+                setError(data.errors);
             }
         } catch (error) {
             console.error('Error submitting the form:', error);
