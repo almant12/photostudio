@@ -3,4 +3,5 @@ export interface JWTPayload {
     name: string;
     role: string;
     exp?: number; // Expiration time as a number (Unix timestamp)
+    
   }
