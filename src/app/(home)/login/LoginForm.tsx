@@ -3,18 +3,16 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react';
 import * as jose from 'jose';
+import toast from 'react-hot-toast';
 
 const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [token, setToken] = useState('');
 
     const router = useRouter()
 
     const handleClick = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError('');
 
         try {
             const res = await fetch('/api/login', {
@@ -29,11 +27,9 @@ const LoginForm = () => {
 
             if (res.ok) {
                 const jwtToken = data.token;
-                setToken(jwtToken);
-
                 // Decode the token to get the user's role
                 const decodedToken = jose.decodeJwt(jwtToken);
-
+                toast.success('You logged in successfully!');
                 // Redirect based on the user's role
                 if (decodedToken.role === 'ADMIN') {
                     router.push('/admin/dashboard'); // Redirect admin to admin dashboard
@@ -45,10 +41,10 @@ const LoginForm = () => {
                     router.push('/'); // Fallback to a default route if no role found
                 }
             } else {
-                setError(data.message); // Display error message from API
+                toast.error('Login failed. Please check your credentials.');
             }
         } catch (err) {
-            setError('An error occurred while connecting to the server.');
+            toast.error('An error occurred while connecting to the server.')
         }
     };
 
@@ -108,8 +104,6 @@ const LoginForm = () => {
                         <div>
                             <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Sign in</button>
                         </div>
-                        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
-                        {token && <p className="text-green-500 mt-4 text-center">Login successful!</p>}
                     </form>
                 </div>
             </div>

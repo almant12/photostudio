@@ -27,13 +27,13 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
             return;
         }
 
-        if(subscribed){
-            onUnsubscribe(userId)
-            toast.success('subscribe');
-    
-        }else{
-            onSubscribe(userId)
-        }
+        if (isSubscribed) {
+            onUnsubscribe(userId);
+            toast.success('You have unsubscribed successfully!');
+          } else {
+            onSubscribe(userId);
+            toast.success('You have subscribed successfully!');
+          }
         setSubscribed(!subscribed)
     }
 
