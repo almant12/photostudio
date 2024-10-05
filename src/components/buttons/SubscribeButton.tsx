@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
-// import { useAlert } from "components/alert/AlertContext";
+import { toast } from 'react-hot-toast';
 
 
 interface SubscribeButtonProps {
@@ -29,6 +29,8 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
 
         if(subscribed){
             onUnsubscribe(userId)
+            toast.success('subscribe');
+    
         }else{
             onSubscribe(userId)
         }
