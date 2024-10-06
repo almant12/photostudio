@@ -29,7 +29,7 @@
     "css-loader": "^7.1.2",
     "formidable": "^3.5.1",
     "gsap": "^3.12.5",
-    "image-handler-almant": "^1.0.15",
+    "image-handler-almant": "^2.0.3",
     "jose": "^5.9.2",
     "lucide-react": "^0.447.0",
     "multiparty": "^4.2.3",

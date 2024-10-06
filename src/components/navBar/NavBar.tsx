@@ -94,7 +94,7 @@ const NavBar = () => {
             <>
               <Link href="/admin/dashboard" className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">Dashboard</Link>
               <NotificationButton notifications={notifications} userId={Number(userAuth.id)}/>
-              <b onClick={logout} className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">Logout</b>
+              <button onClick={logout} className="bg-indigo-600 uppercase font-semibold text-base text-white px-5 py-1 text-xl rounded-2xl border-none hover:bg-indigo-700 transition duration-500 ease-in-out">Logout</button>
             </>
           ) : (
             <>

@@ -22,10 +22,18 @@ const SubscribeButton: React.FC<SubscribeButtonProps> = ({ userId, isSubscribed,
     }, [isSubscribed]);
 
     const handleClick = () =>{
-        if(!isAuthenticate){
-            router.push('/login')
+        if (!isAuthenticate) {
+            // Display a custom warning toast
+            toast('⚠️ You need to log in to access this page.', {
+              style: {
+                background: '#FFA500', // Orange background for warning
+                color: '#FFFFFF', // White text
+              },
+            });
+        
+            router.push('/login');
             return;
-        }
+          }
 
         if (isSubscribed) {
             onUnsubscribe(userId);
